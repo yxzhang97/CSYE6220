@@ -199,3 +199,6 @@ README.html
 *.iml
 .idea
 .exercism
+/mvnw.cmd
+/mvnw
+/HELP.md
