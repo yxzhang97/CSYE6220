@@ -201,4 +201,5 @@ README.html
 .exercism
 /mvnw.cmd
 /mvnw
+.mvn
 /HELP.md
