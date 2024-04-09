@@ -16,7 +16,13 @@ public class ItemEntity {
     private String sku;
 
     @Column
+    private boolean valid;
+
+    @Column
     private String name;
+
+    @Column
+    private double price;
 
     @Column
     private int inventory;
@@ -35,6 +41,10 @@ public class ItemEntity {
 
     @ManyToMany(mappedBy = "items")
     private List<OrderEntity> orders;
+
+    @ManyToOne
+    @JoinColumn(name = "fk_sellerEntity_id")
+    private SellerEntity seller;
 
     public int getId() {
         return id;
@@ -106,5 +116,29 @@ public class ItemEntity {
 
     public void setOrders(List<OrderEntity> orders) {
         this.orders = orders;
+    }
+
+    public SellerEntity getSeller() {
+        return seller;
+    }
+
+    public void setSeller(SellerEntity seller) {
+        this.seller = seller;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public boolean isValid() {
+        return valid;
+    }
+
+    public void setValid(boolean valid) {
+        this.valid = valid;
     }
 }

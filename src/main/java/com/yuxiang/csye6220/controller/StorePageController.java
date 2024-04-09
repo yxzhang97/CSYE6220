@@ -20,7 +20,7 @@ import java.util.Map;
 @RequestMapping("/store-page")
 public class StorePageController {
 
-    private static final int PageLength = 20;
+    private static final int PAGE_LENGTH = 20;
 
     private Configuration configuration;
 
@@ -61,7 +61,7 @@ public class StorePageController {
             Model model){
 
         // use default page length
-        if(pageLength == 0) pageLength = PageLength;
+        if(pageLength == 0) pageLength = PAGE_LENGTH;
 
         // calculate offset
         int offset = pid * pageLength;
@@ -88,7 +88,7 @@ public class StorePageController {
             Model model){
 
         // use default page length
-        if(pageLength == 0) pageLength = PageLength;
+        if(pageLength == 0) pageLength = PAGE_LENGTH;
 
         // calculate offset
         int offset = pid * pageLength;
