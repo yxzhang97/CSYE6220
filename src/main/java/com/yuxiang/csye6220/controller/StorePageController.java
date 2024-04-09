@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -81,7 +80,7 @@ public class StorePageController {
         return "category-page";
     }
 
-    @GetMapping("/search**")
+    @GetMapping("/search")
     public String handleGet_SearchPage(
             @RequestParam(name = "keyword") String keyword,
             @RequestParam(name = "pid", defaultValue = "0") int pid,
@@ -97,8 +96,9 @@ public class StorePageController {
         try(Session session = sessionFactory.openSession()){
 
             // hql query items
-            String hql = "";
+            String hql = "From ItemEntity itemEntity WHERE itemEntity.name = :keyword";
             Query<ItemEntity> query = session.createQuery(hql, ItemEntity.class);
+            query.setParameter("keyword", keyword);
             query.setFirstResult(offset);
             query.setMaxResults(pageLength);
             List<ItemEntity> items = query.list();
