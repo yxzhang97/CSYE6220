@@ -44,11 +44,12 @@ public class UserEntity {
     private boolean valid;
 
     @OneToOne
-    @JoinColumn
+    @JoinColumn(name = "fk_addressEntity_id")
     private AddressEntity defaultDeliveryAddress;
 
     @OneToMany
     @JoinColumn(name = "fk_userEntity_id")
+    @OrderColumn(name="followupNumber")
     private List<AddressEntity> deliveryAddresses;
 
     @OneToMany(mappedBy = "owner")
