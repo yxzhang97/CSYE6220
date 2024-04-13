@@ -26,7 +26,7 @@ public class CommentEntity {
     @JoinColumn(name = "fk_commentEntity_id")
     private List<String> url2media;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "fk_orderItemEntity_id")
     private OrderItemEntity orderItemEntity;
 
