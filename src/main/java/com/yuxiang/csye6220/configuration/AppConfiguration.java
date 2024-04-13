@@ -6,6 +6,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
 @Configuration
 public class AppConfiguration {
 
@@ -52,6 +57,35 @@ public class AppConfiguration {
         OrderItemEntity orderItemEntity = new OrderItemEntity();
         orderItemEntity.setOrderItemEntityId(id);
         return orderItemEntity;
+    }
+
+    @Bean
+    @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
+    public org.hibernate.cfg.Configuration configuration(){
+        org.hibernate.cfg.Configuration conf =  new org.hibernate.cfg.Configuration();
+        conf.configure()
+                .addAnnotatedClass(AddressEntity.class)
+                .addAnnotatedClass(CommentEntity.class)
+                .addAnnotatedClass(ItemEntity.class)
+                .addAnnotatedClass(OrderEntity.class)
+                .addAnnotatedClass(OrderItemEntity.class)
+                .addAnnotatedClass(OrderItemEntityId.class)
+                .addAnnotatedClass(SellerEntity.class)
+                .addAnnotatedClass(UserEntity.class);
+
+        return conf;
+    }
+
+    @Bean
+    @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
+    public Map<String, List<ItemEntity>> homePageItems(){
+        return new HashMap<>();
+    }
+
+    @Bean
+    @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
+    public List<String> homePageCategories(){
+        return new LinkedList<>();
     }
 
 }

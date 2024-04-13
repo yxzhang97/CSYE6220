@@ -35,15 +35,15 @@ public class StorePageController {
     private Map<String, List<ItemEntity>> homePageItems;   // key: category  value: list of items
 
     @Autowired
-    public void setHomePageItems(Map<String, List<ItemEntity>> items){
-        this.homePageItems = items;
+    public void setHomePageItems(Map<String, List<ItemEntity>> homePageItems){
+        this.homePageItems = homePageItems;
     }
 
     private List<String> homePageCategories;
 
     @Autowired
-    public void setHomePageCategories(List<String> categories){
-        this.homePageCategories = categories;
+    public void setHomePageCategories(List<String> homePageCategories){
+        this.homePageCategories = homePageCategories;
     }
 
     @GetMapping
@@ -105,6 +105,21 @@ public class StorePageController {
             model.addAttribute("items", items);
         }
         return "search-page";
+    }
+
+    @GetMapping("/item-detail/{itemId}")
+    public String handleGet_ItemDetail(
+            @PathVariable(name = "itemId") String itemId,
+            Model model){
+
+        try(Session session = sessionFactory.openSession()) {
+            String hql = "From ItemEntity itemEntity WHERE itemEntity.id = :itemId";
+            Query<ItemEntity> query = session.createQuery(hql, ItemEntity.class);
+            query.setParameter("itemId", itemId);
+            ItemEntity itemEntity = query.getSingleResult();
+            model.addAttribute("itemEntity", itemEntity);
+        }
+        return "item-detail";
     }
 
 }
