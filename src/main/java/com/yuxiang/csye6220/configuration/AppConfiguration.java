@@ -60,6 +60,21 @@ public class AppConfiguration {
     }
 
     @Bean
+    @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+    public CartEntity cartEntity_prototype(){
+        return new CartEntity();
+    }
+
+    @Bean
+    @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+    public CartItemEntity cartItemEntity_prototype(){
+        CartItemEntityId id = new CartItemEntityId();
+        CartItemEntity cartItemEntity = new CartItemEntity();
+        cartItemEntity.setCartItemEntityId(id);
+        return cartItemEntity;
+    }
+
+    @Bean
     @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
     public org.hibernate.cfg.Configuration configuration(){
         org.hibernate.cfg.Configuration configuration =  new org.hibernate.cfg.Configuration();

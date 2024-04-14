@@ -119,4 +119,14 @@ public class OrderItemEntity {
     public void setOrderEntity(OrderEntity orderEntity) {
         this.orderEntity = orderEntity;
     }
+
+    public double updateTotalPrice(){
+        totalPrice = unitPrice * amount;
+        return totalPrice;
+    }
+
+    public double updateTotalPrice(double t){
+        setTotalPrice(t);
+        return totalPrice;
+    }
 }
