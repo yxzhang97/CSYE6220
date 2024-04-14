@@ -44,6 +44,10 @@ public class UserEntity {
     private boolean valid;
 
     @OneToOne
+    @JoinColumn(name = "fk_cartEntity_id")
+    private CartEntity cartEntity;
+
+    @OneToOne
     @JoinColumn(name = "fk_addressEntity_id")
     private AddressEntity defaultDeliveryAddress;
 
@@ -165,5 +169,13 @@ public class UserEntity {
 
     public void setOrders(List<OrderEntity> orders) {
         this.orders = orders;
+    }
+
+    public CartEntity getCartEntity() {
+        return cartEntity;
+    }
+
+    public void setCartEntity(CartEntity cartEntity) {
+        this.cartEntity = cartEntity;
     }
 }

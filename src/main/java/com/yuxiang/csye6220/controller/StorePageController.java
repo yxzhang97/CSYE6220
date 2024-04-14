@@ -27,9 +27,9 @@ public class StorePageController {
     private SessionFactory sessionFactory;
 
     @Autowired
-    public StorePageController(Configuration conf){
-        this.configuration = conf;
-        sessionFactory = configuration.configure().buildSessionFactory();
+    public StorePageController(Configuration configuration){
+        this.configuration = configuration;
+        sessionFactory = this.configuration.buildSessionFactory();
     }
 
     private Map<String, List<ItemEntity>> homePageItems;   // key: category  value: list of items

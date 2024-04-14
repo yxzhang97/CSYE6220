@@ -62,8 +62,8 @@ public class AppConfiguration {
     @Bean
     @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
     public org.hibernate.cfg.Configuration configuration(){
-        org.hibernate.cfg.Configuration conf =  new org.hibernate.cfg.Configuration();
-        conf.configure()
+        org.hibernate.cfg.Configuration configuration =  new org.hibernate.cfg.Configuration();
+        configuration.configure()
                 .addAnnotatedClass(AddressEntity.class)
                 .addAnnotatedClass(CommentEntity.class)
                 .addAnnotatedClass(ItemEntity.class)
@@ -73,7 +73,7 @@ public class AppConfiguration {
                 .addAnnotatedClass(SellerEntity.class)
                 .addAnnotatedClass(UserEntity.class);
 
-        return conf;
+        return configuration;
     }
 
     @Bean
