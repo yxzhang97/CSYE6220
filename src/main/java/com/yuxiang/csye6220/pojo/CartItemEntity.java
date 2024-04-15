@@ -11,6 +11,12 @@ public class CartItemEntity {
     @EmbeddedId
     private CartItemEntityId cartItemEntityId;
 
+    @Transient
+    private int cartId;
+
+    @Transient
+    private int itemId;
+
     @Column
     private Date dateCreated;
 
@@ -46,6 +52,8 @@ public class CartItemEntity {
 
     public void setCartItemEntityId(CartItemEntityId cartItemEntityId) {
         this.cartItemEntityId = cartItemEntityId;
+        cartId = cartItemEntityId.getCartId();
+        itemId = cartItemEntityId.getItemId();
     }
 
     public Date getDateCreated() {
@@ -110,6 +118,8 @@ public class CartItemEntity {
 
     public void setItemEntity(ItemEntity itemEntity) {
         this.itemEntity = itemEntity;
+        itemId = itemEntity.getId();
+        cartItemEntityId.setItemId(itemId);
     }
 
     public CartEntity getCartEntity() {
@@ -118,6 +128,8 @@ public class CartItemEntity {
 
     public void setCartEntity(CartEntity cartEntity) {
         this.cartEntity = cartEntity;
+        cartId = cartEntity.getId();
+        cartItemEntityId.setCartId(cartId);
     }
 
     public double updateTotalPrice(){
@@ -138,5 +150,23 @@ public class CartItemEntity {
     public Date updateDateLastModified(){
         this.dateLastModified = new Date();
         return this.dateLastModified;
+    }
+
+    public int getCartId() {
+        return cartId;
+    }
+
+    public void setCartId(int cartId) {
+        this.cartId = cartId;
+        cartItemEntityId.setCartId(cartId);
+    }
+
+    public int getItemId() {
+        return itemId;
+    }
+
+    public void setItemId(int itemId) {
+        this.itemId = itemId;
+        cartItemEntityId.setItemId(itemId);
     }
 }

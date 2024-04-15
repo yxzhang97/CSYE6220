@@ -41,17 +41,88 @@ public class CartController {
         return "cart-page";
     }
 
+    @PutMapping("/cart")
+    public String handlePut_CartPage(
+            @SessionAttribute(name = "user") UserEntity user,
+            @RequestParam(name = "itemId") int itemId,
+            @RequestParam(name = "amount") int amount,
+            Model model
+    ){
+        String hql_getCart = "From CartEntity cartEntity WHERE cartEntity.user.id =: userId";
+        String hql_getCartItem = "From CartItemEntity cartItemEntity WHERE cartItemEntity.id.cartId = :cartId AND cartItemEntity.id.itemId = :itemId";
+        try(Session session = sessionFactory.openSession()){
+            Query<CartEntity> query_getCart = session.createQuery(hql_getCart, CartEntity.class);
+            query_getCart.setParameter("userId", user.getId());
+            CartEntity cartEntity = query_getCart.getSingleResult();
+
+            Query<CartItemEntity> query_getCartItem = session.createQuery(hql_getCartItem, CartItemEntity.class);
+            query_getCartItem.setParameter("cartId", cartEntity.getId());
+            query_getCartItem.setParameter("itemId", itemId);
+            CartItemEntity cartItemEntity = query_getCartItem.getSingleResult();
+            cartItemEntity.setAmount(amount);
+            cartItemEntity.updateTotalPrice();
+            cartItemEntity.updateDateLastModified();
+
+            cartEntity.updateTotalPrice();
+            cartEntity.updateNumOfItems();
+            cartEntity.updateLastModifiedDate();
+
+            Transaction transaction = session.beginTransaction();
+            session.persist(cartItemEntity);
+            session.persist(cartEntity);
+            transaction.commit();
+
+            model.addAttribute("cartEntity", cartEntity);
+        }
+        return "cart-page";
+    }
+
+    @DeleteMapping("/cart")
+    public String handleDelete_CartPage(
+            @SessionAttribute(name = "user") UserEntity user,
+            @RequestParam(name = "itemId") int itemId,
+            Model model
+    ){
+        String hql_getCart = "From CartEntity cartEntity WHERE cartEntity.user.id =: userId";
+        String hql_getCartItem = "From CartItemEntity cartItemEntity WHERE cartItemEntity.id.cartId = :cartId AND cartItemEntity.id.itemId = :itemId";
+        try(Session session = sessionFactory.openSession()){
+            Query<CartEntity> query_getCart = session.createQuery(hql_getCart, CartEntity.class);
+            query_getCart.setParameter("userId", user.getId());
+            CartEntity cartEntity = query_getCart.getSingleResult();
+
+            Query<CartItemEntity> query_getCartItem = session.createQuery(hql_getCartItem, CartItemEntity.class);
+            query_getCartItem.setParameter("cartId", cartEntity.getId());
+            query_getCartItem.setParameter("itemId", itemId);
+            CartItemEntity cartItemEntity = query_getCartItem.getSingleResult();
+            cartItemEntity.setValid(false);
+            cartItemEntity.updateDateLastModified();
+
+            cartEntity.updateTotalPrice();
+            cartEntity.updateNumOfItems();
+            cartEntity.updateLastModifiedDate();
+
+            Transaction transaction = session.beginTransaction();
+            session.persist(cartItemEntity);
+            session.persist(cartEntity);
+            transaction.commit();
+
+            model.addAttribute("cartEntity", cartEntity);
+        }
+        return "cart-page";
+    }
+
     @PostMapping("/cart/newItem/{itemId}")
     public String handlePost_AddingNewItem(
             @SessionAttribute(name = "user") UserEntity user,
             @PathVariable(name = "itemId") int itemId,
             @RequestParam(name = "amount") int amount,
-            Model model){
-        String hql_getCart = "From CartEntity cartEntity WHERE cartEntity.userEntity = :user";
+            Model model
+    ){
+        String hql_getCart = "From CartEntity cartEntity WHERE cartEntity.userEntity.id = :userId";
         String hql_getItem = "From ItemEntity itemEntity WHERE itemEntity.id = :itemId";
         try(Session session = sessionFactory.openSession()){
             Query<CartEntity> query_getCart = session.createQuery(hql_getCart, CartEntity.class);
-            query_getCart.setParameter("user", user);
+            query_getCart.setParameter("userId", user.getId());
             CartEntity cartEntity = query_getCart.getSingleResult();
 
             Query<ItemEntity> query_getItem = session.createQuery(hql_getItem, ItemEntity.class);

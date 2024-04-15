@@ -76,4 +76,22 @@ public class CartEntity {
     public void setOrderItems(List<OrderItemEntity> orderItems) {
         this.orderItems = orderItems;
     }
+
+    public void updateTotalPrice(){
+        /////
+        /////
+        /////
+    }
+
+    public void updateNumOfItems(){
+        /////
+        /////
+        /////
+    }
+
+    public void updateLastModifiedDate(){
+        /////
+        /////
+        /////
+    }
 }
