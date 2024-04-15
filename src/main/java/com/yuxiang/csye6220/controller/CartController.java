@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 @SessionAttributes("user")
+@RequestMapping("/cart")
 public class CartController {
 
     @Autowired
@@ -29,7 +30,7 @@ public class CartController {
         this.sessionFactory = this.configuration.buildSessionFactory();
     }
 
-    @GetMapping("/cart")
+    @GetMapping
     public String handleGet_CartPage(@SessionAttribute(name = "user") UserEntity user, Model model){
         String hql = "From CartEntity cartEntity WHERE cartEntity.userEntity = :user";
         try(Session session = sessionFactory.openSession()){
@@ -41,7 +42,7 @@ public class CartController {
         return "cart-page";
     }
 
-    @PutMapping("/cart")
+    @PutMapping
     public String handlePut_CartPage(
             @SessionAttribute(name = "user") UserEntity user,
             @RequestParam(name = "itemId") int itemId,
@@ -77,7 +78,7 @@ public class CartController {
         return "cart-page";
     }
 
-    @DeleteMapping("/cart")
+    @DeleteMapping
     public String handleDelete_CartPage(
             @SessionAttribute(name = "user") UserEntity user,
             @RequestParam(name = "itemId") int itemId,
@@ -111,7 +112,7 @@ public class CartController {
         return "cart-page";
     }
 
-    @PostMapping("/cart/newItem/{itemId}")
+    @PostMapping("/newItem/{itemId}")
     public String handlePost_AddingNewItem(
             @SessionAttribute(name = "user") UserEntity user,
             @PathVariable(name = "itemId") int itemId,
