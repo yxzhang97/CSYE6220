@@ -42,8 +42,8 @@ public class CartController {
         return "cart-page";
     }
 
-    @PutMapping
-    public String handlePut_CartPage(
+    @PatchMapping
+    public String handlePatch_CartPage(
             @SessionAttribute(name = "user") UserEntity user,
             @RequestParam(name = "itemId") int itemId,
             @RequestParam(name = "amount") int amount,

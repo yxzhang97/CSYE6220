@@ -23,7 +23,7 @@ public class UserEntity {
     private String middleName;
 
     @Column
-    private String LastName;
+    private String lastName;
 
     @Column
     private String emailAddress;
@@ -92,11 +92,11 @@ public class UserEntity {
     }
 
     public String getLastName() {
-        return LastName;
+        return lastName;
     }
 
     public void setLastName(String lastName) {
-        LastName = lastName;
+        this.lastName = lastName;
     }
 
     public String getEmailAddress() {
@@ -177,5 +177,9 @@ public class UserEntity {
 
     public void setCartEntity(CartEntity cartEntity) {
         this.cartEntity = cartEntity;
+    }
+
+    public void updateLastModifiedDate(){
+        dateLastModified = new Date();
     }
 }

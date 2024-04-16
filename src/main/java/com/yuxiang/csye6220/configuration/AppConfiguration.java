@@ -103,4 +103,9 @@ public class AppConfiguration {
         return new LinkedList<>();
     }
 
+    @Bean
+    @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+    public UserInfoBasic userInfoBasic_prototype(){
+        return new UserInfoBasic();
+    }
 }

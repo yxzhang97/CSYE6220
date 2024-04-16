@@ -107,4 +107,8 @@ public class AddressEntity {
     public void setZipCode(String zipCode) {
         this.zipCode = zipCode;
     }
+
+    public void updateDateLastModified(){
+        this.dateLastModified = new Date();
+    }
 }
