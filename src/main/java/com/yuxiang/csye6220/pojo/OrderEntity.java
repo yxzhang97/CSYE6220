@@ -42,7 +42,7 @@ public class OrderEntity {
     )
     private List<ItemEntity> items;
 
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "orderEntity")
     private List<OrderItemEntity> orderItems;
 
     public int getId() {

@@ -8,8 +8,20 @@ import java.util.Date;
 @Table(name = "CartItems")
 public class CartItemEntity {
 
-    @EmbeddedId
-    private CartItemEntityId cartItemEntityId;
+//    @EmbeddedId
+//    private CartItemEntityId cartItemEntityId;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     @Transient
     private int cartId;
@@ -46,15 +58,15 @@ public class CartItemEntity {
     @JoinColumn(name = "fk_cartEntity_id")
     private CartEntity cartEntity;
 
-    public CartItemEntityId getCartItemEntityId() {
-        return cartItemEntityId;
-    }
-
-    public void setCartItemEntityId(CartItemEntityId cartItemEntityId) {
-        this.cartItemEntityId = cartItemEntityId;
-        cartId = cartItemEntityId.getCartId();
-        itemId = cartItemEntityId.getItemId();
-    }
+//    public CartItemEntityId getCartItemEntityId() {
+//        return cartItemEntityId;
+//    }
+//
+//    public void setCartItemEntityId(CartItemEntityId cartItemEntityId) {
+//        this.cartItemEntityId = cartItemEntityId;
+//        cartId = cartItemEntityId.getCartId();
+//        itemId = cartItemEntityId.getItemId();
+//    }
 
     public Date getDateCreated() {
         return dateCreated;
@@ -119,7 +131,7 @@ public class CartItemEntity {
     public void setItemEntity(ItemEntity itemEntity) {
         this.itemEntity = itemEntity;
         itemId = itemEntity.getId();
-        cartItemEntityId.setItemId(itemId);
+//        cartItemEntityId.setItemId(itemId);
     }
 
     public CartEntity getCartEntity() {
@@ -129,7 +141,7 @@ public class CartItemEntity {
     public void setCartEntity(CartEntity cartEntity) {
         this.cartEntity = cartEntity;
         cartId = cartEntity.getId();
-        cartItemEntityId.setCartId(cartId);
+//        cartItemEntityId.setCartId(cartId);
     }
 
     public double updateTotalPrice(){
@@ -158,7 +170,7 @@ public class CartItemEntity {
 
     public void setCartId(int cartId) {
         this.cartId = cartId;
-        cartItemEntityId.setCartId(cartId);
+//        cartItemEntityId.setCartId(cartId);
     }
 
     public int getItemId() {
@@ -167,6 +179,6 @@ public class CartItemEntity {
 
     public void setItemId(int itemId) {
         this.itemId = itemId;
-        cartItemEntityId.setItemId(itemId);
+//        cartItemEntityId.setItemId(itemId);
     }
 }

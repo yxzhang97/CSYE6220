@@ -22,12 +22,16 @@ public class CommentEntity {
     @Column
     private String text;
 
-    @OneToMany
-    @JoinColumn(name = "fk_commentEntity_id")
+    @ElementCollection
+    @CollectionTable(name = "Comments_url2media", joinColumns = { @JoinColumn(name = "fk_commentEntity_id") })
+    @Column
     private List<String> url2media;
 
     @ManyToOne
-    @JoinColumn(name = "fk_orderItemEntity_id")
+    @JoinColumns({
+            @JoinColumn(name = "fk_orderItemEntity_orderId", referencedColumnName = "fk_orderEntity_id"),
+            @JoinColumn(name = "fk_orderItemEntity_itemId", referencedColumnName = "fk_itemEntity_id")
+    })
     private OrderItemEntity orderItemEntity;
 
     @ManyToOne

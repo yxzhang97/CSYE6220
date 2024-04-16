@@ -55,7 +55,7 @@ public class AppConfiguration {
     public OrderItemEntity orderItemEntity_prototype(){
         OrderItemEntityId id = new OrderItemEntityId();
         OrderItemEntity orderItemEntity = new OrderItemEntity();
-        orderItemEntity.setOrderItemEntityId(id);
+        //orderItemEntity.setOrderItemEntityId(id);
         return orderItemEntity;
     }
 
@@ -70,7 +70,7 @@ public class AppConfiguration {
     public CartItemEntity cartItemEntity_prototype(){
         CartItemEntityId id = new CartItemEntityId();
         CartItemEntity cartItemEntity = new CartItemEntity();
-        cartItemEntity.setCartItemEntityId(id);
+        //cartItemEntity.setCartItemEntityId(id);
         return cartItemEntity;
     }
 
@@ -86,7 +86,10 @@ public class AppConfiguration {
                 .addAnnotatedClass(OrderItemEntity.class)
                 .addAnnotatedClass(OrderItemEntityId.class)
                 .addAnnotatedClass(SellerEntity.class)
-                .addAnnotatedClass(UserEntity.class);
+                .addAnnotatedClass(UserEntity.class)
+                .addAnnotatedClass(CartEntity.class)
+                .addAnnotatedClass(CartItemEntity.class)
+                .addAnnotatedClass(CartItemEntityId.class);
 
         return configuration;
     }

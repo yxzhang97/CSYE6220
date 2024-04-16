@@ -8,8 +8,20 @@ import java.util.Date;
 @Table(name = "OrderItems")
 public class OrderItemEntity {
 
-    @EmbeddedId
-    private OrderItemEntityId orderItemEntityId;
+//    @EmbeddedId
+//    private OrderItemEntityId orderItemEntityId;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     @Column
     private Date dateCreated;
@@ -40,13 +52,13 @@ public class OrderItemEntity {
     @JoinColumn(name = "fk_orderEntity_id")
     private OrderEntity orderEntity;
 
-    public OrderItemEntityId getOrderItemEntityId() {
-        return orderItemEntityId;
-    }
-
-    public void setOrderItemEntityId(OrderItemEntityId orderItemEntityId) {
-        this.orderItemEntityId = orderItemEntityId;
-    }
+//    public OrderItemEntityId getOrderItemEntityId() {
+//        return orderItemEntityId;
+//    }
+//
+//    public void setOrderItemEntityId(OrderItemEntityId orderItemEntityId) {
+//        this.orderItemEntityId = orderItemEntityId;
+//    }
 
     public Date getDateCreated() {
         return dateCreated;

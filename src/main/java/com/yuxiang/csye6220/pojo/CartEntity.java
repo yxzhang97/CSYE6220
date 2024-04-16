@@ -25,9 +25,8 @@ public class CartEntity {
     @Column
     private int numOfItems;
 
-    @OneToMany
-    @JoinColumn(name = "fk_cartEntity_id")
-    private List<OrderItemEntity> orderItems;
+    @OneToMany(mappedBy = "cartEntity")
+    private List<CartItemEntity> cartItems;
 
     public int getId() {
         return id;
@@ -69,12 +68,12 @@ public class CartEntity {
         this.numOfItems = numOfItems;
     }
 
-    public List<OrderItemEntity> getOrderItems() {
-        return orderItems;
+    public List<CartItemEntity> getCartItems() {
+        return cartItems;
     }
 
-    public void setOrderItems(List<OrderItemEntity> orderItems) {
-        this.orderItems = orderItems;
+    public void setCartItems(List<CartItemEntity> cartItems) {
+        this.cartItems = cartItems;
     }
 
     public void updateTotalPrice(){

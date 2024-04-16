@@ -33,7 +33,9 @@ public class ItemEntity {
     @Column
     private String manufacturer;
 
-    @OneToMany
+    @ElementCollection
+    @CollectionTable(name = "Items_url2media", joinColumns = { @JoinColumn(name = "fk_itemEntity_id") })
+    @Column
     private List<String> url2media;
 
     @OneToMany(mappedBy = "itemEntity")
