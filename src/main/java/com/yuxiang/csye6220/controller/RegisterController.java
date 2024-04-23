@@ -33,7 +33,8 @@ public class RegisterController {
 
     @GetMapping("/user")
     public String handleGet_userRegister(){
-        return "register-user";
+        System.out.println("register-user");
+        return "register-user.html";
     }
 
     @PostMapping("/user")
@@ -57,7 +58,7 @@ public class RegisterController {
 
     @GetMapping("/seller")
     public String handleGet_sellerRegister(){
-        return "register-seller";
+        return "register-seller.html";
     }
 
     @PostMapping("/seller")

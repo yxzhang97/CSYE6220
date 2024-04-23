@@ -50,7 +50,7 @@ public class StorePageController {
     public String handleGet_HomePage(Model model) {
         model.addAttribute("homePageCategories", homePageCategories);
         model.addAttribute("homePageItems", homePageItems);
-        return "home-page";
+        return "store-page-home.html";
     }
 
     @GetMapping("/{category}")

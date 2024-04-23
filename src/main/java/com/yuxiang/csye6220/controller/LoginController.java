@@ -35,7 +35,7 @@ public class LoginController {
 
     @GetMapping("/user")
     public String handleGet_userLogin(){
-        return "login-user";
+        return "login-user.html";
     }
 
     @PostMapping("/user")
@@ -49,19 +49,19 @@ public class LoginController {
             httpSession.setAttribute("user", userEntity);
             httpSession.setAttribute("userLogin", true);
         }
-        return "login-user-successful";
+        return "login-user-successful.html";
     }
 
     @GetMapping("/user/logout")
     public String handleGet_userLogout(HttpSession httpSession){
         httpSession.removeAttribute("user");
         httpSession.removeAttribute("userLogin");
-        return "logout-user";
+        return "logout-user.html";
     }
 
     @GetMapping("/seller")
     public String handleGet_sellerLogin(){
-        return "login-seller";
+        return "login-seller.html";
     }
 
     @PostMapping("/seller")
@@ -75,13 +75,13 @@ public class LoginController {
             httpSession.setAttribute("seller", sellerEntity);
             httpSession.setAttribute("sellerLogin", true);
         }
-        return "login-seller-successful";
+        return "login-seller-successful.html";
     }
 
     @GetMapping("/seller/logout")
     public String handleGet_sellerLogout(HttpSession httpSession){
         httpSession.removeAttribute("seller");
         httpSession.removeAttribute("sellerLogin");
-        return "logout-seller";
+        return "logout-seller.html";
     }
 }
