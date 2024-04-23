@@ -98,4 +98,12 @@ public class SellerEntity {
     public void setOrderItems(List<OrderItemEntity> orderItems) {
         this.orderItems = orderItems;
     }
+
+    public void updateCreatedDate(){
+        dateCreated = new Date();
+    }
+
+    public void updateLastModifiedDate(){
+        dateLastModified = new Date();
+    }
 }

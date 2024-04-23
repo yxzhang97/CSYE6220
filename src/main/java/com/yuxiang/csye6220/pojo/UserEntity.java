@@ -179,6 +179,10 @@ public class UserEntity {
         this.cartEntity = cartEntity;
     }
 
+    public void updateCreatedDate(){
+        dateCreated = new Date();
+    }
+
     public void updateLastModifiedDate(){
         dateLastModified = new Date();
     }
