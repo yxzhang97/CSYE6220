@@ -103,6 +103,7 @@ public class AccountInfoController {
         if(userEntity == null)
             return "redirect:/login/user";
 
+        model.addAttribute("defaultAddress", userEntity.getDefaultDeliveryAddress());
         model.addAttribute("deliveryAddresses", userEntity.getDeliveryAddresses());
         return "account-info-delivery-addresses";
     }
@@ -206,15 +207,12 @@ public class AccountInfoController {
             Transaction transaction = session.beginTransaction();
             session.merge(addressEntity);
             transaction.commit();
-
-
-
         }
         return "redirect:/account-info/delivery-addresses";
     }
 
-    @PatchMapping("/delivery-addresses/modify/default/{addressId}")
-    public String handlePatch_addressesModifyDefault(
+    @RequestMapping("/delivery-addresses/modify/default/{addressId}")
+    public String handlePost_addressesModifyDefault(
             @SessionAttribute(name = "user", required = false) UserEntity userEntity,
             @PathVariable(name = "addressId") int addressId
     ){
@@ -232,9 +230,40 @@ public class AccountInfoController {
             userEntity.updateLastModifiedDate();
 
             Transaction transaction = session.beginTransaction();
-            session.persist(userEntity);
+            session.merge(userEntity);
             transaction.commit();
         }
         return "redirect:/account-info/delivery-addresses";
+    }
+
+    @RequestMapping("/delivery-addresses/remove/{addressId}")
+    public String handlePost_addressesModifyRemove(
+            @SessionAttribute(name = "user", required = false) UserEntity userEntity,
+            @PathVariable(name = "addressId") int addressId
+    ){
+        // check login state
+        if(userEntity == null)
+            return "redirect:/login/user";
+
+        if(!isAuthenticated(userEntity.getId()))
+            return "unauthenticated";
+
+        for(AddressEntity addressEntity : userEntity.getDeliveryAddresses()){
+            if(addressEntity.getId() == addressId){
+                try(Session session = sessionFactory.openSession()){
+                    addressEntity.setValid(false);
+                    if(userEntity.getDefaultDeliveryAddress().getId() == addressId)
+                        userEntity.getDefaultDeliveryAddress().setValid(false);
+                    session.getTransaction().begin();
+                    session.merge(addressEntity);
+                    session.getTransaction().commit();
+                }
+            }
+        }
+        return "redirect:/account-info/delivery-addresses";
+    }
+
+    private boolean isAuthenticated(int currentUserId){
+        return true;
     }
 }
