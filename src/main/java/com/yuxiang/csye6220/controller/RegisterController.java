@@ -8,11 +8,14 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
 
 @Controller
 @RequestMapping("/register")
@@ -33,15 +36,25 @@ public class RegisterController {
 
     @GetMapping("/user")
     public String handleGet_userRegister(){
-        System.out.println("register-user");
-        return "register-user.html";
+        return "register-user";
     }
 
     @PostMapping("/user")
     public String handlePost_userRegister(
             @ModelAttribute UserRegisterDTO userRegisterDTO,
-            BindingResult bindingResult
+            BindingResult bindingResult,
+            Model model
     ){
+        try(Session session = sessionFactory.openSession()){
+            String hql = "SELECT emailAddress FROM UserEntity userEntity WHERE userEntity.emailAddress = :emailAddress";
+            Query<String> query = session.createQuery(hql, String.class);
+            query.setParameter("emailAddress", userRegisterDTO.getEmailAddress());
+            if(query.getSingleResultOrNull() != null) {
+                model.addAttribute("message", "email exists");
+                return "register-user-error";
+            }
+        }
+
         UserEntity userEntity = applicationContext.getBean("userEntity_prototype", UserEntity.class);
         userRegisterDTO.updateBasicInfoToUserEntity(userEntity);
         userEntity.setValid(true);
@@ -58,14 +71,25 @@ public class RegisterController {
 
     @GetMapping("/seller")
     public String handleGet_sellerRegister(){
-        return "register-seller.html";
+        return "register-seller";
     }
 
     @PostMapping("/seller")
     public String handlePost_sellerRegister(
             @ModelAttribute SellerRegisterDTO sellerRegisterDTO,
-            BindingResult bindingResult
+            BindingResult bindingResult,
+            Model model
     ){
+        try(Session session = sessionFactory.openSession()) {
+            String hql = "SELECT name FROM SellerEntity sellerEntity WHERE sellerEntity.name = :name";
+            Query<String> query = session.createQuery(hql, String.class);
+            query.setParameter("name", sellerRegisterDTO.getName());
+            if (query.getSingleResultOrNull() != null) {
+                model.addAttribute("message", "name exists");
+                return "register-seller-error";
+            }
+        }
+
         SellerEntity sellerEntity = applicationContext.getBean("sellerEntity_prototype", SellerEntity.class);
         sellerRegisterDTO.updateBasicInfoToSellerEntity(sellerEntity);
         sellerEntity.setValid(true);

@@ -5,6 +5,6 @@
     <title>Title</title>
 </head>
 <body>
-  <h2>store-page</h2>
+    <h2>register error</h2>
 </body>
 </html>

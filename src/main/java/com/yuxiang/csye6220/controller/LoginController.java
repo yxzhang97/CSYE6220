@@ -35,7 +35,7 @@ public class LoginController {
 
     @GetMapping("/user")
     public String handleGet_userLogin(){
-        return "login-user.html";
+        return "login-user";
     }
 
     @PostMapping("/user")
@@ -45,23 +45,27 @@ public class LoginController {
             Query<UserEntity> query = session.createQuery(hql, UserEntity.class);
             query.setParameter("emailAddress", userLoginDTO.getEmailAddress());
             query.setParameter("password", userLoginDTO.getPassword());
-            UserEntity userEntity = query.getSingleResult();
+            UserEntity userEntity = query.getSingleResultOrNull();
+
+            if(userEntity == null)
+                return "login-user-error";
+
             httpSession.setAttribute("user", userEntity);
             httpSession.setAttribute("userLogin", true);
         }
-        return "login-user-successful.html";
+        return "login-user-successful";
     }
 
     @GetMapping("/user/logout")
     public String handleGet_userLogout(HttpSession httpSession){
         httpSession.removeAttribute("user");
         httpSession.removeAttribute("userLogin");
-        return "logout-user.html";
+        return "logout-user";
     }
 
     @GetMapping("/seller")
     public String handleGet_sellerLogin(){
-        return "login-seller.html";
+        return "login-seller";
     }
 
     @PostMapping("/seller")
@@ -72,16 +76,20 @@ public class LoginController {
             query.setParameter("name", sellerLoginDTO.getName());
             query.setParameter("password", sellerLoginDTO.getPassword());
             SellerEntity sellerEntity = query.getSingleResultOrNull();
+
+            if(sellerEntity == null)
+                return "login-seller-error";
+
             httpSession.setAttribute("seller", sellerEntity);
             httpSession.setAttribute("sellerLogin", true);
         }
-        return "login-seller-successful.html";
+        return "login-seller-successful";
     }
 
     @GetMapping("/seller/logout")
     public String handleGet_sellerLogout(HttpSession httpSession){
         httpSession.removeAttribute("seller");
         httpSession.removeAttribute("sellerLogin");
-        return "logout-seller.html";
+        return "logout-seller";
     }
 }
