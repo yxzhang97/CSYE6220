@@ -1,9 +1,6 @@
 package com.yuxiang.csye6220.controller;
 
-import com.yuxiang.csye6220.pojo.SellerEntity;
-import com.yuxiang.csye6220.pojo.SellerRegisterDTO;
-import com.yuxiang.csye6220.pojo.UserEntity;
-import com.yuxiang.csye6220.pojo.UserRegisterDTO;
+import com.yuxiang.csye6220.pojo.*;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -15,6 +12,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.LinkedList;
 
 
 @Controller
@@ -61,9 +60,19 @@ public class RegisterController {
         userEntity.updateCreatedDate();
         userEntity.updateLastModifiedDate();
 
+        CartEntity cartEntity = applicationContext.getBean("cartEntity_prototype", CartEntity.class);
+        cartEntity.setUserEntity(userEntity);
+        cartEntity.setCartItems(new LinkedList<>());
+        cartEntity.updateNumOfItems();
+        cartEntity.updateTotalPrice();
+        cartEntity.updateLastModifiedDate();
+
+        userEntity.setCartEntity(cartEntity);
+
         try(Session session = sessionFactory.openSession()){
             Transaction transaction = session.beginTransaction();
             session.persist(userEntity);
+            session.persist(cartEntity);
             transaction.commit();
         }
         return "redirect:/login/user";

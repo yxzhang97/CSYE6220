@@ -25,6 +25,10 @@ public class OrderEntity {
     @Column
     private double totalPrice;
 
+    public void setNumOfItems(int numOfItems) {
+        this.numOfItems = numOfItems;
+    }
+
     @Transient
     private int numOfItems;
 
@@ -44,6 +48,18 @@ public class OrderEntity {
 
     @OneToMany(mappedBy = "orderEntity")
     private List<OrderItemEntity> orderItems;
+
+    @ManyToOne
+    @JoinColumn(name = "fk_addressEntity_id")
+    private AddressEntity addressEntity;    // delivery address
+
+    public AddressEntity getAddressEntity() {
+        return addressEntity;
+    }
+
+    public void setAddressEntity(AddressEntity addressEntity) {
+        this.addressEntity = addressEntity;
+    }
 
     public int getId() {
         return id;

@@ -14,9 +14,10 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.support.SessionStatus;
 
 @Controller
-@SessionAttributes({"userLogin", "user", "sellerLogin", "seller"})
+@SessionAttributes({"user", "seller"})
 @RequestMapping("/login")
 public class LoginController {
 
@@ -51,16 +52,14 @@ public class LoginController {
                 return "login-user-error";
 
             httpSession.setAttribute("user", userEntity);
-            httpSession.setAttribute("userLogin", true);
         }
         return "login-user-successful";
     }
 
     @GetMapping("/user/logout")
-    public String handleGet_userLogout(HttpSession httpSession){
-        httpSession.removeAttribute("user");
-        httpSession.removeAttribute("userLogin");
-        return "logout-user";
+    public String handleGet_userLogout(SessionStatus sessionStatus){
+        sessionStatus.setComplete();
+        return "redirect:/login/user";
     }
 
     @GetMapping("/seller")
@@ -81,15 +80,13 @@ public class LoginController {
                 return "login-seller-error";
 
             httpSession.setAttribute("seller", sellerEntity);
-            httpSession.setAttribute("sellerLogin", true);
         }
         return "login-seller-successful";
     }
 
     @GetMapping("/seller/logout")
-    public String handleGet_sellerLogout(HttpSession httpSession){
-        httpSession.removeAttribute("seller");
-        httpSession.removeAttribute("sellerLogin");
-        return "logout-seller";
+    public String handleGet_sellerLogout(SessionStatus sessionStatus){
+        sessionStatus.setComplete();
+        return "redirect:/login/seller";
     }
 }

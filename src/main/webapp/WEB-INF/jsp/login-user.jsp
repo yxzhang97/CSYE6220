@@ -1,3 +1,4 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,6 +12,7 @@
       password: <input type="text" name="password">
       <input type="submit">
   </form>
-
+  <p><a href="/account-info/basic">account-info-basic</a></p>
+  <p><a href="/login/user/logout">logout</a></p>
 </body>
 </html>

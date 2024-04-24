@@ -77,20 +77,22 @@ public class CartEntity {
     }
 
     public void updateTotalPrice(){
-        /////
-        /////
-        /////
+        totalPrice = 0;
+        for(CartItemEntity c : cartItems){
+            if(c.isValid())
+                totalPrice += c.getTotalPrice();
+        }
     }
 
     public void updateNumOfItems(){
-        /////
-        /////
-        /////
+        numOfItems = 0;
+        for(CartItemEntity c : cartItems){
+            if(c.isValid())
+                numOfItems += c.getAmount();
+        }
     }
 
     public void updateLastModifiedDate(){
-        /////
-        /////
-        /////
+        dateLastModified = new Date();
     }
 }

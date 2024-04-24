@@ -9,7 +9,7 @@
       </property>
 
       <property name="hibernate.hbm2ddl.auto">
-          update
+         update
       </property>
 
       <property name = "hibernate.connection.driver_class">

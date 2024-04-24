@@ -85,7 +85,6 @@ public class OrderController {
             session.persist(orderEntity);
 
             List<CartItemEntity> cartItems = userEntity.getCartEntity().getCartItems();
-            List<OrderItemEntity> orderItems = new LinkedList<>();
             for (CartItemEntity c : cartItems) {
                 OrderItemEntity orderItemEntity = applicationContext.getBean("orderItemEntity_prototype", OrderItemEntity.class);
                 orderItemEntity.setDateCreated(new Date());
