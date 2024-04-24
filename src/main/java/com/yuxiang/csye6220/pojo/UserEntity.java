@@ -51,9 +51,8 @@ public class UserEntity {
     @JoinColumn(name = "fk_addressEntity_id")
     private AddressEntity defaultDeliveryAddress;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "fk_userEntity_id")
-    @OrderColumn(name="followupNumber")
     private List<AddressEntity> deliveryAddresses;
 
     @OneToMany(mappedBy = "owner")

@@ -15,6 +15,8 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
+
 @Controller
 @RequestMapping("/account-info")
 public class AccountInfoController {
@@ -62,8 +64,8 @@ public class AccountInfoController {
         return "account-info-basic-modify";
     }
 
-    @PatchMapping("/basic/modify")
-    public String handlePut_basic(
+    @PostMapping("/basic/modify")
+    public String handlePost_basic(
             @SessionAttribute(name = "user", required = false) UserEntity userEntity,
             @ModelAttribute(name = "userInfoBasic", binding = true) UserInfoBasic userInfoBasic,
             BindingResult bindingResult,
@@ -76,24 +78,24 @@ public class AccountInfoController {
         userInfoBasic.updateBasicInfoToUserEntity(userEntity);
         userEntity.updateLastModifiedDate();
         try(Session session = sessionFactory.openSession()){
-            Transaction transaction = session.beginTransaction();
-            session.persist(userEntity);
-            transaction.commit();
+            session.getTransaction().begin();
+            session.merge(userEntity);
+            session.getTransaction().commit();
         }
 
         // redirect to url /account-info/basic
         return "redirect:/account-info/basic";
     }
 
-    @GetMapping("/orders")
-    public String handleGet_orders(@SessionAttribute(name = "user", required = false) UserEntity userEntity, Model model){
-        // check login state
-        if(userEntity == null)
-            return "redirect:/login/user";
-
-        model.addAttribute("orders", userEntity.getOrders());
-        return "account-info-orders";
-    }
+//    @GetMapping("/orders")
+//    public String handleGet_orders(@SessionAttribute(name = "user", required = false) UserEntity userEntity, Model model){
+//        // check login state
+//        if(userEntity == null)
+//            return "redirect:/login/user";
+//
+//        model.addAttribute("orders", userEntity.getOrders());
+//        return "account-info-orders";
+//    }
 
     @GetMapping("/delivery-addresses")
     public String handleGet_addresses(@SessionAttribute(name = "user", required = false) UserEntity userEntity, Model model){
@@ -103,6 +105,50 @@ public class AccountInfoController {
 
         model.addAttribute("deliveryAddresses", userEntity.getDeliveryAddresses());
         return "account-info-delivery-addresses";
+    }
+
+    @GetMapping("/delivery-addresses/new")
+    public String handleGet_addressesNew(@SessionAttribute(name = "user", required = false) UserEntity userEntity, Model model){
+        // check login state
+        if(userEntity == null)
+            return "redirect:/login/user";
+
+        AddressEntity addressEntity = applicationContext.getBean("addressEntity_prototype", AddressEntity.class);
+        model.addAttribute("addressEntity", addressEntity);
+        return "account-info-delivery-addresses-new";
+    }
+
+    @PostMapping("/delivery-addresses/new")
+    public String handlePost_addressesNew(
+            @SessionAttribute(name = "user", required = false) UserEntity userEntity,
+            @RequestParam(name = "state") String state,
+            @RequestParam(name = "city") String city,
+            @RequestParam(name = "street") String street,
+            @RequestParam(name = "aptNumber") String aptNumber,
+            @RequestParam(name = "zipCode") String zipCode
+    ){
+        // check login state
+        if(userEntity == null)
+            return "redirect:/login/user";
+
+        try(Session session = sessionFactory.openSession()){
+            AddressEntity addressEntity = applicationContext.getBean("addressEntity_prototype", AddressEntity.class);
+            addressEntity.setValid(true);
+            addressEntity.setState(state);
+            addressEntity.setCity(city);
+            addressEntity.setStreet(street);
+            addressEntity.setAptNumber(aptNumber);
+            addressEntity.setZipCode(zipCode);
+            addressEntity.setDateCreated(new Date());
+            addressEntity.updateDateLastModified();
+
+            Transaction transaction = session.beginTransaction();
+            session.persist(addressEntity);
+            userEntity.getDeliveryAddresses().add(addressEntity);
+            session.merge(userEntity);
+            transaction.commit();
+        }
+        return "redirect:/account-info/delivery-addresses";
     }
 
     @GetMapping("/delivery-addresses/modify/{addressId}")
@@ -125,11 +171,10 @@ public class AccountInfoController {
         return "account-info-delivery-addresses-modify";
     }
 
-    @PatchMapping("/delivery-addresses/modify/{addressId}")
+    @PostMapping("/delivery-addresses/modify/{addressId}")
     public String handlePatch_addressesModify(
             @SessionAttribute(name = "user", required = false) UserEntity userEntity,
             @PathVariable(name = "addressId") int addressId,
-            @RequestParam(name = "valid") boolean valid,
             @RequestParam(name = "state") String state,
             @RequestParam(name = "city") String city,
             @RequestParam(name = "street") String street,
@@ -144,8 +189,13 @@ public class AccountInfoController {
         try(Session session = sessionFactory.openSession()){
             Query<AddressEntity> query = session.createQuery(hql, AddressEntity.class);
             query.setParameter("addressId", addressId);
-            AddressEntity addressEntity = query.getSingleResult();
-            addressEntity.setValid(valid);
+            AddressEntity addressEntity = query.getSingleResultOrNull();
+            if(addressEntity == null)
+                return "account-info-delivery-addresses-modify-error";
+
+            for(AddressEntity a : userEntity.getDeliveryAddresses())
+                if(a.getId() == addressId)
+                    addressEntity = a;
             addressEntity.setState(state);
             addressEntity.setCity(city);
             addressEntity.setStreet(street);
@@ -154,8 +204,11 @@ public class AccountInfoController {
             addressEntity.updateDateLastModified();
 
             Transaction transaction = session.beginTransaction();
-            session.persist(addressEntity);
+            session.merge(addressEntity);
             transaction.commit();
+
+
+
         }
         return "redirect:/account-info/delivery-addresses";
     }
