@@ -28,7 +28,7 @@ public class SellerEntity {
     @Column
     private String password;
 
-    @OneToMany(mappedBy = "seller")
+    @OneToMany(mappedBy = "sellerEntity")
     private List<ItemEntity> items;
 
     @OneToMany

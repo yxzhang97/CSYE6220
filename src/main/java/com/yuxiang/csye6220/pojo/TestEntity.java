@@ -7,7 +7,7 @@ import jakarta.persistence.*;
 public class TestEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
     @Column

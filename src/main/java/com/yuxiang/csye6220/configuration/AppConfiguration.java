@@ -53,7 +53,7 @@ public class AppConfiguration {
     @Bean
     @Scope(value = ConfigurableBeanFactory.SCOPE_PROTOTYPE)
     public OrderItemEntity orderItemEntity_prototype(){
-        OrderItemEntityId id = new OrderItemEntityId();
+        //OrderItemEntityId id = new OrderItemEntityId();
         OrderItemEntity orderItemEntity = new OrderItemEntity();
         //orderItemEntity.setOrderItemEntityId(id);
         return orderItemEntity;

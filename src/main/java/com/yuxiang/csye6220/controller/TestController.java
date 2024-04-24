@@ -34,7 +34,7 @@ public class TestController {
         testEntity.setName("quindex");
         try(Session session = sessionFactory.openSession()){
             Transaction transaction = session.beginTransaction();
-            session.save(testEntity);
+            session.persist(testEntity);
             transaction.commit();
         }
         return null;
