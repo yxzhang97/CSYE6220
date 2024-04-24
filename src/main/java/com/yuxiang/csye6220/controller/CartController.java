@@ -13,7 +13,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@SessionAttributes("user")
 @RequestMapping("/cart")
 public class CartController {
 
@@ -31,11 +30,15 @@ public class CartController {
     }
 
     @GetMapping
-    public String handleGet_CartPage(@SessionAttribute(name = "user") UserEntity user, Model model){
-        String hql = "From CartEntity cartEntity WHERE cartEntity.userEntity = :user";
+    public String handleGet_CartPage(@SessionAttribute(name = "user", required = false) UserEntity userEntity, Model model){
+        // check login state
+        if(userEntity == null)
+            return "redirect:/login/user";
+
+        String hql = "FROM CartEntity cartEntity WHERE cartEntity.userEntity.id = :userId";
         try(Session session = sessionFactory.openSession()){
             Query<CartEntity> query = session.createQuery(hql, CartEntity.class);
-            query.setParameter("user", user);
+            query.setParameter("userId", userEntity.getId());
             CartEntity cartEntity = query.getSingleResult();
             model.addAttribute("cartEntity", cartEntity);
         }
@@ -44,16 +47,20 @@ public class CartController {
 
     @PatchMapping
     public String handlePatch_CartPage(
-            @SessionAttribute(name = "user") UserEntity user,
+            @SessionAttribute(name = "user", required = false) UserEntity userEntity,
             @RequestParam(name = "itemId") int itemId,
             @RequestParam(name = "amount") int amount,
             Model model
     ){
-        String hql_getCart = "From CartEntity cartEntity WHERE cartEntity.user.id =: userId";
-        String hql_getCartItem = "From CartItemEntity cartItemEntity WHERE cartItemEntity.id.cartId = :cartId AND cartItemEntity.id.itemId = :itemId";
+        // check login state
+        if(userEntity == null)
+            return "redirect:/login/user";
+
+        String hql_getCart = "FROM CartEntity cartEntity WHERE cartEntity.userEntity.id =: userId";
+        String hql_getCartItem = "FROM CartItemEntity cartItemEntity WHERE cartItemEntity.id.cartId = :cartId AND cartItemEntity.id.itemId = :itemId";
         try(Session session = sessionFactory.openSession()){
             Query<CartEntity> query_getCart = session.createQuery(hql_getCart, CartEntity.class);
-            query_getCart.setParameter("userId", user.getId());
+            query_getCart.setParameter("userId", userEntity.getId());
             CartEntity cartEntity = query_getCart.getSingleResult();
 
             Query<CartItemEntity> query_getCartItem = session.createQuery(hql_getCartItem, CartItemEntity.class);
@@ -80,15 +87,19 @@ public class CartController {
 
     @DeleteMapping
     public String handleDelete_CartPage(
-            @SessionAttribute(name = "user") UserEntity user,
+            @SessionAttribute(name = "user", required = false) UserEntity userEntity,
             @RequestParam(name = "itemId") int itemId,
             Model model
     ){
-        String hql_getCart = "From CartEntity cartEntity WHERE cartEntity.user.id =: userId";
-        String hql_getCartItem = "From CartItemEntity cartItemEntity WHERE cartItemEntity.id.cartId = :cartId AND cartItemEntity.id.itemId = :itemId";
+        // check login state
+        if(userEntity == null)
+            return "redirect:/login/user";
+
+        String hql_getCart = "FROM CartEntity cartEntity WHERE cartEntity.userEntity.id =: userId";
+        String hql_getCartItem = "FROM CartItemEntity cartItemEntity WHERE cartItemEntity.id.cartId = :cartId AND cartItemEntity.id.itemId = :itemId";
         try(Session session = sessionFactory.openSession()){
             Query<CartEntity> query_getCart = session.createQuery(hql_getCart, CartEntity.class);
-            query_getCart.setParameter("userId", user.getId());
+            query_getCart.setParameter("userId", userEntity.getId());
             CartEntity cartEntity = query_getCart.getSingleResult();
 
             Query<CartItemEntity> query_getCartItem = session.createQuery(hql_getCartItem, CartItemEntity.class);
@@ -114,16 +125,20 @@ public class CartController {
 
     @PostMapping("/newItem/{itemId}")
     public String handlePost_AddingNewItem(
-            @SessionAttribute(name = "user") UserEntity user,
+            @SessionAttribute(name = "user", required = false) UserEntity userEntity,
             @PathVariable(name = "itemId") int itemId,
             @RequestParam(name = "amount") int amount,
             Model model
     ){
-        String hql_getCart = "From CartEntity cartEntity WHERE cartEntity.userEntity.id = :userId";
-        String hql_getItem = "From ItemEntity itemEntity WHERE itemEntity.id = :itemId";
+        // check login state
+        if(userEntity == null)
+            return "redirect:/login/user";
+
+        String hql_getCart = "FROM CartEntity cartEntity WHERE cartEntity.userEntity.id = :userId";
+        String hql_getItem = "FROM ItemEntity itemEntity WHERE itemEntity.id = :itemId";
         try(Session session = sessionFactory.openSession()){
             Query<CartEntity> query_getCart = session.createQuery(hql_getCart, CartEntity.class);
-            query_getCart.setParameter("userId", user.getId());
+            query_getCart.setParameter("userId", userEntity.getId());
             CartEntity cartEntity = query_getCart.getSingleResult();
 
             Query<ItemEntity> query_getItem = session.createQuery(hql_getItem, ItemEntity.class);

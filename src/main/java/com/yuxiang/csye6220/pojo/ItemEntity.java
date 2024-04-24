@@ -46,7 +46,7 @@ public class ItemEntity {
 
     @ManyToOne
     @JoinColumn(name = "fk_sellerEntity_id")
-    private SellerEntity seller;
+    private SellerEntity sellerEntity;
 
     public int getId() {
         return id;
@@ -120,12 +120,12 @@ public class ItemEntity {
         this.orders = orders;
     }
 
-    public SellerEntity getSeller() {
-        return seller;
+    public SellerEntity getSellerEntity() {
+        return sellerEntity;
     }
 
-    public void setSeller(SellerEntity seller) {
-        this.seller = seller;
+    public void setSellerEntity(SellerEntity sellerEntity) {
+        this.sellerEntity = sellerEntity;
     }
 
     public double getPrice() {
