@@ -29,7 +29,7 @@ public class CartController {
         this.sessionFactory = this.configuration.buildSessionFactory();
     }
 
-    @GetMapping
+    @GetMapping("/all")
     public String handleGet_CartPage(@SessionAttribute(name = "user", required = false) UserEntity userEntity, Model model){
         // check login state
         if(userEntity == null)
@@ -42,85 +42,39 @@ public class CartController {
             CartEntity cartEntity = query.getSingleResult();
             model.addAttribute("cartEntity", cartEntity);
         }
-        return "cart-page";
+        return "cart-all";
     }
 
-    @PatchMapping
-    public String handlePatch_CartPage(
-            @SessionAttribute(name = "user", required = false) UserEntity userEntity,
-            @RequestParam(name = "itemId") int itemId,
-            @RequestParam(name = "amount") int amount,
-            Model model
-    ){
-        // check login state
-        if(userEntity == null)
-            return "redirect:/login/user";
-
-        String hql_getCart = "FROM CartEntity cartEntity WHERE cartEntity.userEntity.id =: userId";
-        String hql_getCartItem = "FROM CartItemEntity cartItemEntity WHERE cartItemEntity.id.cartId = :cartId AND cartItemEntity.id.itemId = :itemId";
-        try(Session session = sessionFactory.openSession()){
-            Query<CartEntity> query_getCart = session.createQuery(hql_getCart, CartEntity.class);
-            query_getCart.setParameter("userId", userEntity.getId());
-            CartEntity cartEntity = query_getCart.getSingleResult();
-
-            Query<CartItemEntity> query_getCartItem = session.createQuery(hql_getCartItem, CartItemEntity.class);
-            query_getCartItem.setParameter("cartId", cartEntity.getId());
-            query_getCartItem.setParameter("itemId", itemId);
-            CartItemEntity cartItemEntity = query_getCartItem.getSingleResult();
-            cartItemEntity.setAmount(amount);
-            cartItemEntity.updateTotalPrice();
-            cartItemEntity.updateDateLastModified();
-
-            cartEntity.updateTotalPrice();
-            cartEntity.updateNumOfItems();
-            cartEntity.updateLastModifiedDate();
-
-            Transaction transaction = session.beginTransaction();
-            session.persist(cartItemEntity);
-            session.persist(cartEntity);
-            transaction.commit();
-
-            model.addAttribute("cartEntity", cartEntity);
-        }
-        return "cart-page";
-    }
-
-    @DeleteMapping
+    @RequestMapping("/delete/{cartItemId}")
     public String handleDelete_CartPage(
             @SessionAttribute(name = "user", required = false) UserEntity userEntity,
-            @RequestParam(name = "itemId") int itemId,
+            @PathVariable(name = "cartItemId") int cartItemId,
             Model model
     ){
         // check login state
         if(userEntity == null)
             return "redirect:/login/user";
 
-        String hql_getCart = "FROM CartEntity cartEntity WHERE cartEntity.userEntity.id =: userId";
-        String hql_getCartItem = "FROM CartItemEntity cartItemEntity WHERE cartItemEntity.id.cartId = :cartId AND cartItemEntity.id.itemId = :itemId";
-        try(Session session = sessionFactory.openSession()){
-            Query<CartEntity> query_getCart = session.createQuery(hql_getCart, CartEntity.class);
-            query_getCart.setParameter("userId", userEntity.getId());
-            CartEntity cartEntity = query_getCart.getSingleResult();
+        CartEntity cartEntity = userEntity.getCartEntity();
+        for(CartItemEntity cartItemEntity : cartEntity.getCartItems()) {
+            if(cartItemEntity.getId() == cartItemId) {
+                try (Session session = sessionFactory.openSession()) {
+                    cartItemEntity.setValid(false);
 
-            Query<CartItemEntity> query_getCartItem = session.createQuery(hql_getCartItem, CartItemEntity.class);
-            query_getCartItem.setParameter("cartId", cartEntity.getId());
-            query_getCartItem.setParameter("itemId", itemId);
-            CartItemEntity cartItemEntity = query_getCartItem.getSingleResult();
-            cartItemEntity.setValid(false);
-            cartItemEntity.updateDateLastModified();
+                    cartEntity.updateTotalPrice();
+                    cartEntity.updateNumOfItems();
+                    cartEntity.updateLastModifiedDate();
 
-            cartEntity.updateTotalPrice();
-            cartEntity.updateNumOfItems();
-            cartEntity.updateLastModifiedDate();
+                    Transaction transaction = session.beginTransaction();
+                    session.merge(cartItemEntity);
+                    session.merge(cartEntity);
+                    transaction.commit();
 
-            Transaction transaction = session.beginTransaction();
-            session.persist(cartItemEntity);
-            session.persist(cartEntity);
-            transaction.commit();
-
-            model.addAttribute("cartEntity", cartEntity);
+                    model.addAttribute("cartEntity", cartEntity);
+                }
+            }
         }
-        return "cart-page";
+        return "cart-all";
     }
 
     @PostMapping("/newItem/{itemId}")
@@ -154,8 +108,16 @@ public class CartController {
             cartItemEntity.setValid(true);
             cartItemEntity.updateDateCreate();
 
+            cartEntity.getCartItems().add(cartItemEntity);
+            cartEntity.updateNumOfItems();
+            cartEntity.updateTotalPrice();
+            cartEntity.updateLastModifiedDate();
+
+            userEntity.setCartEntity(cartEntity);
+
             Transaction transaction = session.beginTransaction();
             session.persist(cartItemEntity);
+            session.persist(cartEntity);
             transaction.commit();
 
             model.addAttribute("cartItemEntity", cartItemEntity);

@@ -25,7 +25,7 @@ public class CartEntity {
     @Column
     private int numOfItems;
 
-    @OneToMany(mappedBy = "cartEntity")
+    @OneToMany(mappedBy = "cartEntity", fetch = FetchType.EAGER)
     private List<CartItemEntity> cartItems;
 
     public int getId() {

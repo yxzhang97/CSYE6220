@@ -10,6 +10,7 @@
 		<h2>login successfully</h2>
 		<p><a href="/account-info/basic">account-info-basic</a></p>
         <p><a href="/login/user/logout">logout</a></p>
+        <p><a href="/store-page">store home page</a></p>
 
 	</body>
 </html>

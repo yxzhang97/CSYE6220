@@ -20,9 +20,15 @@
     <p><img src="${url}" alt="alternatetext"></p>
   </c:forEach>
 
-  <p><a href="/cart/newItem/${itemEntity.id}">
-        <button width="400%" height="500%">add to cart</button>
-  </p></a>
+  <form action="/cart/newItem/${itemEntity.id}" method="post">
+  amount:
+    <select name="amount">
+      <c:forEach var = "i" begin = "1" end = "${itemEntity.inventory}">
+        <option value="${i}">${i}</option>
+      </c:forEach>
+    </select>
+    <input type="submit" value="add to cart">
+  </form>
 
   <c:forEach var="comment" items="${itemEntity.comments}">
     <p>date: ${comment.dateCreated}</p>
