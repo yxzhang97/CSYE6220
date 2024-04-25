@@ -20,6 +20,10 @@
     <p><img src="${url}" alt="alternatetext"></p>
   </c:forEach>
 
+  <p><a href="/cart/newItem/${itemEntity.id}">
+        <button width="400%" height="500%">add to cart</button>
+  </p></a>
+
   <c:forEach var="comment" items="${itemEntity.comments}">
     <p>date: ${comment.dateCreated}</p>
     <p>user: ${comment.userEntity.nickName}</p>
@@ -27,9 +31,6 @@
     <br>
   </c:forEach>
 
-  <p><a href="/account-info/basic">account-info-basic</a></p>
-  <p><a href="/login/user/logout">logout</a></p>
-  <p><a href="/register/user">user register</a></p>
   <p><a href="/store-page">store home page</a></p>
 </body>
 </html>

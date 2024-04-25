@@ -7,24 +7,21 @@
         <title>comment</title>
     </head>
     <body>
-
-    <p>
-        <form action="/store-page/search" method="get">
-            <input type="text" name="keyword">
-            <input type="submit" value="search">
-        </form>
-    </p>
-
+        <h2>search result</h2>
+        <p>
+           <form action="/store-page/search" method="get">
+             <input type="text" name="keyword" value="${keyword}">
+             <input type="submit" value="search">
+           </form>
+        </p>
         <c:forEach var="item" items="${items}">
             <p>
-                <a href="/store-page/item-detail/${item.id}">
-                    <img src="${cover}" width="300" height="200" alt="cover image"></img>
-                    ${item.name} $${item.price}
-                </a>
+            <a href="/store-page/item-detail/${item.id}">
+               <img src="${cover}" width="300" height="200" alt="cover image"></img>
+               ${item.name} $${item.price}
+            </a>
             </p>
         </c:forEach>
-
-
 
         <p><a href="/store-page">store home page</a></p>
 

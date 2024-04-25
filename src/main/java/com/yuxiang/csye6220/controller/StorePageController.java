@@ -20,7 +20,7 @@ import java.util.Map;
 @RequestMapping("/store-page")
 public class StorePageController {
 
-    private static final int PAGE_LENGTH = 20;
+    private static final int PAGE_LENGTH = 10;
 
     private Configuration configuration;
 
@@ -47,18 +47,13 @@ public class StorePageController {
     }
 
     @GetMapping
-    public String handleGet_HomePage(Model model) {
-        model.addAttribute("homePageCategories", homePageCategories);
-        model.addAttribute("homePageItems", homePageItems);
-        return "store-home";
-    }
-
-    @GetMapping("/{category}")
-    public String handleGet_CategoryPage(
-            @PathVariable("category") String category,
+    public String handleGet_HomePage(
             @RequestParam(name = "pid", defaultValue = "0") int pid,
             @RequestParam(name = "pageLength", defaultValue = "0") int pageLength,
-            Model model){
+            Model model
+    ) {
+//        model.addAttribute("homePageCategories", homePageCategories);
+//        model.addAttribute("homePageItems", homePageItems);
 
         // use default page length
         if(pageLength == 0) pageLength = PAGE_LENGTH;
@@ -66,19 +61,44 @@ public class StorePageController {
         // calculate offset
         int offset = pid * pageLength;
 
-        try(Session session = sessionFactory.openSession()){
-
-            // hql query items
-            String hql = "From ItemEntity itemEntity WHERE itemEntity.category = :category";
+        try(Session session = sessionFactory.openSession()) {
+            String hql = "FROM ItemEntity itemEntity WHERE itemEntity.valid = :valid";
             Query<ItemEntity> query = session.createQuery(hql, ItemEntity.class);
-            query.setParameter("category", category);
+            query.setParameter("valid", true);
             query.setFirstResult(offset);
             query.setMaxResults(pageLength);
             List<ItemEntity> items = query.list();
             model.addAttribute("items", items);
         }
-        return "store-category";
+        return "store-home";
     }
+
+//    @GetMapping("/{category}")
+//    public String handleGet_CategoryPage(
+//            @PathVariable("category") String category,
+//            @RequestParam(name = "pid", defaultValue = "0") int pid,
+//            @RequestParam(name = "pageLength", defaultValue = "0") int pageLength,
+//            Model model){
+//
+//        // use default page length
+//        if(pageLength == 0) pageLength = PAGE_LENGTH;
+//
+//        // calculate offset
+//        int offset = pid * pageLength;
+//
+//        try(Session session = sessionFactory.openSession()){
+//
+//            // hql query items
+//            String hql = "From ItemEntity itemEntity WHERE itemEntity.category = :category";
+//            Query<ItemEntity> query = session.createQuery(hql, ItemEntity.class);
+//            query.setParameter("category", category);
+//            query.setFirstResult(offset);
+//            query.setMaxResults(pageLength);
+//            List<ItemEntity> items = query.list();
+//            model.addAttribute("items", items);
+//        }
+//        return "store-category";
+//    }
 
     @GetMapping("/search")
     public String handleGet_SearchPage(
@@ -96,13 +116,15 @@ public class StorePageController {
         try(Session session = sessionFactory.openSession()){
 
             // hql query items
-            String hql = "From ItemEntity itemEntity WHERE itemEntity.name = :keyword";
+            String hql = "From ItemEntity itemEntity WHERE itemEntity.valid = :valid AND itemEntity.name LIKE :keyword";
             Query<ItemEntity> query = session.createQuery(hql, ItemEntity.class);
-            query.setParameter("keyword", keyword);
+            query.setParameter("valid", true);
+            query.setParameter("keyword", "%" + keyword + "%");
             query.setFirstResult(offset);
             query.setMaxResults(pageLength);
             List<ItemEntity> items = query.list();
             model.addAttribute("items", items);
+            model.addAttribute("keyword", keyword);
         }
         return "store-search";
     }
