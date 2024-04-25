@@ -76,7 +76,7 @@ public class ItemDTO {
 
     public void updateInfoToItemEntity(ItemEntity itemEntity){
         itemEntity.setSku(sku);
-        itemEntity.setValid(valid);
+        //itemEntity.setValid(valid);
         itemEntity.setName(name);
         itemEntity.setPrice(price);
         itemEntity.setInventory(inventory);

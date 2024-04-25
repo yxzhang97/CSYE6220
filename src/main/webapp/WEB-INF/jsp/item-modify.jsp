@@ -19,6 +19,7 @@
       <input type="submit" value="submit">
   </form>
 
+  <p><a href="/item/delete/${itemEntity.id}"><button>delete</button></a></p>
 
   <c:forEach var="url" items="${itemEntity.url2media}">
     <p><img src="${url}" alt="alternatetext"></p>

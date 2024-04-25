@@ -93,23 +93,27 @@ public class ItemController {
         if(sellerEntity == null)
             return "redirect:/login/seller";
 
-        try(Session session = sessionFactory.openSession()){
-            String hql = "FROM ItemEntity itemEntity WHERE itemEntity.id = :itemId";
-            Query<ItemEntity> query = session.createQuery(hql, ItemEntity.class);
-            query.setParameter("itemId", itemId);
-            ItemEntity itemEntity = query.getSingleResultOrNull();
-            itemDTO.updateInfoToItemEntity(itemEntity);
-            Transaction transaction = session.beginTransaction();
-            session.persist(itemEntity);
-            transaction.commit();
+        if(!isAuthenticated(itemId, sellerEntity))
+            return "unauthenticated";
+
+        for(ItemEntity itemEntity : sellerEntity.getItems()) {
+            if(itemEntity.getId() == itemId) {
+                try (Session session = sessionFactory.openSession()) {
+                    itemDTO.updateInfoToItemEntity(itemEntity);
+                    Transaction transaction = session.beginTransaction();
+                    session.merge(itemEntity);
+                    transaction.commit();
+                }
+            }
         }
         return "redirect:/item/" + itemId;
     }
 
     @GetMapping("/modify/{itemId}/media")
-    public String handleGet_itemModifyMedia(@PathVariable(name = "itemId") int itemId,
-                                            @SessionAttribute(name = "seller", required = false)SellerEntity sellerEntity,
-                                            Model model
+    public String handleGet_itemModifyMedia(
+            @PathVariable(name = "itemId") int itemId,
+            @SessionAttribute(name = "seller", required = false)SellerEntity sellerEntity,
+            Model model
     ){
         // check login state
         if(sellerEntity == null)
@@ -127,10 +131,11 @@ public class ItemController {
     }
 
     @DeleteMapping("/modify/{itemId}/media")
-    public String handleDelete_itemModifyMedia(@PathVariable(name = "itemId") int itemId,
-                                               @SessionAttribute(name = "seller", required = false)SellerEntity sellerEntity,
-                                               @RequestParam(name = "url2media") String url2media,
-                                               Model model
+    public String handleDelete_itemModifyMedia(
+            @PathVariable(name = "itemId") int itemId,
+            @SessionAttribute(name = "seller", required = false)SellerEntity sellerEntity,
+            @RequestParam(name = "url2media") String url2media,
+            Model model
     ){
         // check login state
         if(sellerEntity == null)
@@ -159,10 +164,11 @@ public class ItemController {
     }
 
     @PostMapping("/modify/{itemId}/media")
-    public String handlePost_itemModifyMedia(@PathVariable(name = "itemId") int itemId,
-                                             @SessionAttribute(name = "seller", required = false)SellerEntity sellerEntity,
-                                             @RequestParam(name = "url2media") String url2media,
-                                             Model model
+    public String handlePost_itemModifyMedia(
+            @PathVariable(name = "itemId") int itemId,
+            @SessionAttribute(name = "seller", required = false)SellerEntity sellerEntity,
+            @RequestParam(name = "url2media") String url2media,
+            Model model
     ){
         // check login state
         if(sellerEntity == null)
@@ -213,6 +219,31 @@ public class ItemController {
             Transaction transaction = session.beginTransaction();
             session.persist(itemEntity);
             transaction.commit();
+        }
+        return "redirect:/item/all";
+    }
+
+    @RequestMapping("/delete/{itemId}")
+    public String handlePost_newItem(
+            @SessionAttribute(name = "seller", required = false) SellerEntity sellerEntity,
+            @PathVariable(name = "itemId") int itemId
+    ){
+        // check login state
+        if(sellerEntity == null)
+            return "redirect:/login/seller";
+
+        if(!isAuthenticated(itemId, sellerEntity))
+            return "unauthenticated";
+
+        for(ItemEntity itemEntity : sellerEntity.getItems()) {
+            if(itemEntity.getId() == itemId) {
+                try (Session session = sessionFactory.openSession()) {
+                    itemEntity.setValid(false);
+                    Transaction transaction = session.beginTransaction();
+                    session.merge(itemEntity);
+                    transaction.commit();
+                }
+            }
         }
         return "redirect:/item/all";
     }
