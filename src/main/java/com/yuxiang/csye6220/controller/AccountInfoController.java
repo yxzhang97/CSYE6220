@@ -162,6 +162,9 @@ public class AccountInfoController {
         if(userEntity == null)
             return "redirect:/login/user";
 
+        if(!isAuthenticated(addressId, userEntity))
+            return "unauthenticated";
+
         String hql = "FROM AddressEntity addressEntity WHERE addressEntity.id = :addressId";
         try(Session session = sessionFactory.openSession()){
             Query<AddressEntity> query = session.createQuery(hql, AddressEntity.class);
@@ -185,6 +188,9 @@ public class AccountInfoController {
         // check login state
         if(userEntity == null)
             return "redirect:/login/user";
+
+        if(!isAuthenticated(addressId, userEntity))
+            return "unauthenticated";
 
         String hql = "FROM AddressEntity addressEntity WHERE addressEntity.id = :addressId";
         try(Session session = sessionFactory.openSession()){
@@ -220,6 +226,9 @@ public class AccountInfoController {
         if(userEntity == null)
             return "redirect:/login/user";
 
+        if(!isAuthenticated(addressId, userEntity))
+            return "unauthenticated";
+
         String hql = "FROM AddressEntity addressEntity WHERE addressEntity.id = :addressId";
         try(Session session = sessionFactory.openSession()){
             Query<AddressEntity> query = session.createQuery(hql, AddressEntity.class);
@@ -245,7 +254,7 @@ public class AccountInfoController {
         if(userEntity == null)
             return "redirect:/login/user";
 
-        if(!isAuthenticated(userEntity.getId()))
+        if(!isAuthenticated(addressId, userEntity))
             return "unauthenticated";
 
         for(AddressEntity addressEntity : userEntity.getDeliveryAddresses()){
@@ -263,7 +272,10 @@ public class AccountInfoController {
         return "redirect:/account-info/delivery-addresses";
     }
 
-    private boolean isAuthenticated(int currentUserId){
-        return true;
+    private boolean isAuthenticated(int addressId, UserEntity userEntity){
+        for(AddressEntity addressEntity : userEntity.getDeliveryAddresses())
+            if(addressEntity.getId() == addressId)
+                return true;
+        return false;
     }
 }

@@ -14,5 +14,6 @@
   </form>
   <p><a href="/account-info/basic">account-info-basic</a></p>
   <p><a href="/login/user/logout">logout</a></p>
+  <p><a href="/register/user">user register</a></p>
 </body>
 </html>
