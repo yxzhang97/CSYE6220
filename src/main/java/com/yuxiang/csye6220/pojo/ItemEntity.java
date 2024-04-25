@@ -33,12 +33,12 @@ public class ItemEntity {
     @Column
     private String manufacturer;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "Items_url2media", joinColumns = { @JoinColumn(name = "fk_itemEntity_id") })
     @Column
     private List<String> url2media;
 
-    @OneToMany(mappedBy = "itemEntity")
+    @OneToMany(mappedBy = "itemEntity", fetch = FetchType.EAGER)
     private List<CommentEntity> comments;
 
     @ManyToMany(mappedBy = "items")

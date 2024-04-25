@@ -12,5 +12,9 @@
       <input type="submit">
   </form>
 
+  <p><a href="/item/all">item all</a></p>
+  <p><a href="/login/seller/logout">logout</a></p>
+  <p><a href="/register/seller">seller register</a></p>
+
 </body>
 </html>

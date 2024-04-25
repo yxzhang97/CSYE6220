@@ -10,4 +10,9 @@
 	<body>
 		<h2>login successfully</h2>
 	</body>
+
+	<p><a href="/item/all">item all</a></p>
+      <p><a href="/item/newItem">add new item</a></p>
+      <p><a href="/login/seller/logout">logout</a></p>
+      <p><a href="/register/seller">seller register</a></p>
 </html>

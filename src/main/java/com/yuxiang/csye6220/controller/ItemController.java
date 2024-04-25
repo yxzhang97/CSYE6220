@@ -39,13 +39,7 @@ public class ItemController {
         if(sellerEntity == null)
             return "redirect:/login/seller";
 
-        String hql = "FROM ItemEntity itemEntity WHERE itemEntity.seller.id = :sellerId";
-        try(Session session = sessionFactory.openSession()){
-            Query<ItemEntity> query = session.createQuery(hql, ItemEntity.class);
-            query.setParameter("sellerId", sellerEntity.getId());
-            List<ItemEntity> items = query.list();
-            model.addAttribute("items", items);
-        }
+        model.addAttribute("items", sellerEntity.getItems());
         return "item-all";
     }
 
@@ -65,7 +59,7 @@ public class ItemController {
             ItemEntity itemEntity = query.getSingleResultOrNull();
             model.addAttribute("itemEntity", itemEntity);
         }
-        return "item-page";
+        return "item-detail";
     }
 
     @GetMapping("/modify/{itemId}")
@@ -77,6 +71,9 @@ public class ItemController {
         if(sellerEntity == null)
             return "redirect:/login/seller";
 
+        if(!isAuthenticated(itemId, sellerEntity))
+            return "unauthenticated";
+
         String hql = "FROM ItemEntity itemEntity WHERE itemEntity.id = :itemId";
         try(Session session = sessionFactory.openSession()){
             Query<ItemEntity> query = session.createQuery(hql, ItemEntity.class);
@@ -87,7 +84,7 @@ public class ItemController {
         return "item-modify";
     }
 
-    @PatchMapping("/modify/{itemId}")
+    @PostMapping("/modify/{itemId}")
     public String handlePatch_itemModify(@PathVariable(name = "itemId") int itemId,
                                          @SessionAttribute(name = "seller", required = false)SellerEntity sellerEntity,
                                          @ModelAttribute(name = "itemDTO") ItemDTO itemDTO
@@ -209,11 +206,21 @@ public class ItemController {
 
         ItemEntity itemEntity = applicationContext.getBean("itemEntity_prototype", ItemEntity.class);
         itemDTO.updateInfoToItemEntity(itemEntity);
+        itemEntity.setValid(true);
+        itemEntity.setSellerEntity(sellerEntity);
+        sellerEntity.getItems().add(itemEntity);
         try(Session session = sessionFactory.openSession()){
             Transaction transaction = session.beginTransaction();
             session.persist(itemEntity);
             transaction.commit();
         }
-        return "item-new-successful";
+        return "redirect:/item/all";
+    }
+
+    private boolean isAuthenticated(int itemId, SellerEntity sellerEntity){
+        for(ItemEntity itemEntity : sellerEntity.getItems())
+            if(itemEntity.getId() == itemId)
+                return true;
+        return false;
     }
 }

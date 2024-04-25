@@ -77,7 +77,7 @@ public class StorePageController {
             List<ItemEntity> items = query.list();
             model.addAttribute("items", items);
         }
-        return "category-page";
+        return "store-category";
     }
 
     @GetMapping("/search")
@@ -104,7 +104,7 @@ public class StorePageController {
             List<ItemEntity> items = query.list();
             model.addAttribute("items", items);
         }
-        return "search-page";
+        return "store-search";
     }
 
     @GetMapping("/item-detail/{itemId}")
@@ -119,7 +119,7 @@ public class StorePageController {
             ItemEntity itemEntity = query.getSingleResult();
             model.addAttribute("itemEntity", itemEntity);
         }
-        return "item-detail";
+        return "store-item-detail";
     }
 
 }
