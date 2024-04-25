@@ -28,6 +28,7 @@
 
         <p><a href="/store-page">store home page</a></p>
         <p><a href="/cart/all">cart</a></p>
+        <p><a href="/order/all">orders</a></p>
 
     </body>
 </html>

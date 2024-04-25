@@ -1,9 +1,6 @@
 package com.yuxiang.csye6220.controller;
 
-import com.yuxiang.csye6220.pojo.CartItemEntity;
-import com.yuxiang.csye6220.pojo.OrderEntity;
-import com.yuxiang.csye6220.pojo.OrderItemEntity;
-import com.yuxiang.csye6220.pojo.UserEntity;
+import com.yuxiang.csye6220.pojo.*;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -62,13 +59,33 @@ public class OrderController {
             query.setParameter("orderId", orderId);
             OrderEntity orderEntity = query.getSingleResultOrNull();
             model.addAttribute("orderEntity", orderEntity);
+            model.addAttribute("orderItems", orderEntity.getOrderItems());
         }
         return "order-page";
     }
 
+    @RequestMapping("/newOrder/pre")
+    public String handle_orderNewPre(
+            @SessionAttribute(name = "user", required = false)UserEntity userEntity,
+            Model model
+    ){
+        // check login state
+        if(userEntity == null)
+            return "redirect:/login/user";
+
+        model.addAttribute("cartEntity", userEntity.getCartEntity());
+        model.addAttribute("cartItems", userEntity.getCartEntity().getCartItems());
+        model.addAttribute("defaultAddress", userEntity.getDefaultDeliveryAddress());
+        model.addAttribute("deliveryAddresses", userEntity.getDeliveryAddresses());
+
+        return "order-new-delivery-address";
+    }
+
     @PostMapping("/newOrder")
     public String handlePost_orderNew(
-            @SessionAttribute(name = "user", required = false)UserEntity userEntity
+            @SessionAttribute(name = "user", required = false)UserEntity userEntity,
+            @RequestParam(name = "addressId") int addressId,
+            Model model
     ){
         // check login state
         if(userEntity == null)
@@ -81,11 +98,19 @@ public class OrderController {
             orderEntity.setOrderItems(new LinkedList<>());
             orderEntity.setValid(true);
             orderEntity.setOwner(userEntity);
-            userEntity.getOrders().add(orderEntity);
+            for(AddressEntity addressEntity : userEntity.getDeliveryAddresses())
+                if(addressEntity.getId() == addressId){
+                    orderEntity.setAddressEntity(addressEntity);
+                    break;
+                }
             session.persist(orderEntity);
 
-            List<CartItemEntity> cartItems = userEntity.getCartEntity().getCartItems();
+            userEntity.getOrders().add(orderEntity);
+
+            CartEntity cartEntity = userEntity.getCartEntity();
+            List<CartItemEntity> cartItems = cartEntity.getCartItems();
             for (CartItemEntity c : cartItems) {
+                if(!c.isValid()) continue;
                 OrderItemEntity orderItemEntity = applicationContext.getBean("orderItemEntity_prototype", OrderItemEntity.class);
                 orderItemEntity.setDateCreated(new Date());
                 orderItemEntity.setDateLastModified(orderItemEntity.getDateCreated());
@@ -98,12 +123,29 @@ public class OrderController {
                 orderItemEntity.setOrderEntity(orderEntity);
                 session.persist(orderItemEntity);
 
-                c.getItemEntity().setInventory(c.getItemEntity().getInventory() - 1);
+                c.getItemEntity().setInventory(c.getItemEntity().getInventory() - c.getAmount());
+                c.setValid(false);
+                session.merge(c);
+                session.merge(c.getItemEntity());
 
                 orderEntity.getOrderItems().add(orderItemEntity);
-                orderEntity.setTotalPrice(orderEntity.getTotalPrice() + orderItemEntity.getTotalPrice());
             }
+            orderEntity.updateNumOfItems();
+            orderEntity.updateTotalPrice();
+            orderEntity.setDateCreated(new Date());
+            orderEntity.updateDateLastModified();
+            session.persist(orderEntity);
+
+            cartEntity.updateNumOfItems();
+            cartEntity.updateTotalPrice();
+            cartEntity.updateLastModifiedDate();
+            session.merge(cartEntity);
+
             transaction.commit();
+
+            model.addAttribute("orderEntity", orderEntity);
+            model.addAttribute("orderItems", orderEntity.getOrderItems());
+            model.addAttribute("deliveryAddress", orderEntity.getAddressEntity());
         }
         return "order-new-successful";
     }

@@ -46,7 +46,7 @@ public class OrderEntity {
     )
     private List<ItemEntity> items;
 
-    @OneToMany(mappedBy = "orderEntity")
+    @OneToMany(mappedBy = "orderEntity", fetch = FetchType.EAGER)
     private List<OrderItemEntity> orderItems;
 
     @ManyToOne
@@ -109,10 +109,6 @@ public class OrderEntity {
         return numOfItems;
     }
 
-    public void updateNumOfItems() {
-        this.numOfItems = this.items.size();
-    }
-
     public String getDescription() {
         return description;
     }
@@ -143,5 +139,25 @@ public class OrderEntity {
 
     public void setOrderItems(List<OrderItemEntity> orderItems) {
         this.orderItems = orderItems;
+    }
+
+    public void updateTotalPrice(){
+        totalPrice = 0;
+        for(OrderItemEntity o : orderItems){
+            if(o.isValid())
+                totalPrice += o.getTotalPrice();
+        }
+    }
+
+    public void updateNumOfItems(){
+        numOfItems = 0;
+        for(OrderItemEntity o : orderItems){
+            if(o.isValid())
+                numOfItems += o.getAmount();
+        }
+    }
+
+    public void updateDateLastModified(){
+        dateLastModified = new Date();
     }
 }

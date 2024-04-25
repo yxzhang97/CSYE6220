@@ -8,7 +8,7 @@
     <title>Title</title>
 </head>
 <body>
-  <h2>cart</h2>
+  <h2>your order</h2>
   <h3>total price: ${cartEntity.totalPrice}</h3>
   <h3>num of items: ${cartEntity.numOfItems}</h3>
   <c:forEach var="cartItem" items="${cartEntity.cartItems}">
@@ -23,7 +23,20 @@
   </c:if>
   </c:forEach>
 
-  <a href="/order/newOrder/pre"><button>check out</button></a>
+  <form action="/order/newOrder" method="post">
+    <select name="addressId">
+        <c:if test = "${defaultAddress.valid}">
+            <option value="${defaultAddress.id}">${defaultAddress.state} ${defaultAddress.city} ${defaultAddress.street} ${defaultAddress.aptNumber} ${defaultAddress.zipCode} (default)</option>
+        </c:if>
+        <c:forEach var="address" items="${deliveryAddresses}">
+          <c:if test = "${address.valid}">
+            <option value="${address.id}">${address.state} ${address.city} ${address.street} ${address.aptNumber} ${address.zipCode} </option>
+          </c:if>
+        </c:forEach>
+    </select>
+    <p><input type="submit" value="place order"></p>
+  </form>
+
 
 <p><a href="/store-page">store home page</a></p>
 

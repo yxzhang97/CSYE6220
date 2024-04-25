@@ -55,7 +55,7 @@ public class UserEntity {
     @JoinColumn(name = "fk_userEntity_id")
     private List<AddressEntity> deliveryAddresses;
 
-    @OneToMany(mappedBy = "owner")
+    @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER)
     private List<OrderEntity> orders;
 
     public int getId() {
