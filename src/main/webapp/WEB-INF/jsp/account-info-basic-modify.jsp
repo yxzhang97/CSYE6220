@@ -1,28 +1,82 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>comment</title>
-    </head>
-    <body>
-        <form action="/account-info/basic/modify" method="post">
-          <p>nick name: <input type="text" name="nickName" value="${userInfoBasic.nickName}"></p>
-          <p>first name: <input type="text" name="firstName" value="${userInfoBasic.firstName}"></p>
-          <p>middle name: <input type="text" name="middleName" value="${userInfoBasic.middleName}"></p>
-          <p>last name: <input type="text" name="lastName" value="${userInfoBasic.lastName}"></p>
-          <p>email address: <input type="text" name="emailAddress" value="${userInfoBasic.emailAddress}"></p>
-          <p>phone number: <input type="text" name="phoneNumber" value="${userInfoBasic.phoneNumber}"></p>
-          <input type="submit" value="submit">
-        </form>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Information Modification</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f8f8;
+        }
 
-        <form action="/account-info/basic/modify">
-            <input type="submit" value="modify basic info" />
-        </form>
+        h1, h2, h3 {
+            color: #333;
+        }
 
-        <p><a href="/account-info/delivery-addresses">delivery addresses</a></p>
-        <p><a href="/account-info/basic">account-info-basic</a></p>
-        <p><a href="/login/user/logout">logout</a></p>
-    </body>
+        p {
+            color: #666;
+            margin: 10px 0;
+        }
+
+        form {
+            margin-top: 20px;
+        }
+
+        input[type="text"], input[type="submit"] {
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        a {
+            text-decoration: none;
+            color: #069;
+        }
+
+        a:hover {
+            color: #09f;
+        }
+    </style>
+</head>
+<body>
+    <h1>User Information Modification</h1>
+    <form action="/account-info/basic/modify" method="post">
+        <p>Nick Name: <input type="text" name="nickName" value="${userInfoBasic.nickName}"></p>
+        <p>First Name: <input type="text" name="firstName" value="${userInfoBasic.firstName}"></p>
+        <p>Middle Name: <input type="text" name="middleName" value="${userInfoBasic.middleName}"></p>
+        <p>Last Name: <input type="text" name="lastName" value="${userInfoBasic.lastName}"></p>
+        <p>Email Address: <input type="text" name="emailAddress" value="${userInfoBasic.emailAddress}"></p>
+        <p>Phone Number: <input type="text" name="phoneNumber" value="${userInfoBasic.phoneNumber}"></p>
+        <input type="submit" value="Submit">
+    </form>
+
+    <form action="/account-info/basic/modify">
+        <input type="submit" value="Modify Basic Info" />
+    </form>
+
+    <p><a href="/account-info/delivery-addresses">Delivery Addresses</a></p>
+    <p><a href="/account-info/basic">Account Info Basic</a></p>
+    <p><a href="/login/user/logout">Logout</a></p>
+</body>
 </html>

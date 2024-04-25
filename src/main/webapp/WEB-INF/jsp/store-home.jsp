@@ -6,6 +6,9 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>comment</title>
     </head>
+    <style>
+              body {text-align: center;}
+        </style>
     <body>
 
     <p>

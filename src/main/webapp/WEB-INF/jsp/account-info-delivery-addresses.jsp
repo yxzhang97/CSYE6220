@@ -15,7 +15,7 @@
             <p>
                 ${da.state} ${da.city} ${da.street} ${da.aptNumber} ${da.zipCode}
                 <a href="/account-info/delivery-addresses/modify/${da.id}"><button>modify</button></a>
-                <a href="/account-info/delivery-addresses/modify/default/${da.id}"><button>set default</button></a>
+                <a href="/account-info/delivery-addresses/modify/default/${da.id}"><button>set as default</button></a>
                 <a href="/account-info/delivery-addresses/remove/${da.id}"><button>remove</button></a>
             </p>
         </c:if>

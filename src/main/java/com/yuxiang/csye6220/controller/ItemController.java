@@ -2,6 +2,7 @@ package com.yuxiang.csye6220.controller;
 
 import com.yuxiang.csye6220.pojo.ItemDTO;
 import com.yuxiang.csye6220.pojo.ItemEntity;
+import com.yuxiang.csye6220.pojo.OrderItemEntity;
 import com.yuxiang.csye6220.pojo.SellerEntity;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -246,6 +247,29 @@ public class ItemController {
             }
         }
         return "redirect:/item/all";
+    }
+
+    @GetMapping("/{itemId}/orders")
+    public String handleGet_itemOrder(
+            @SessionAttribute(name = "seller", required = false) SellerEntity sellerEntity,
+            @PathVariable(name = "itemId") int itemId,
+            Model model
+    ){
+        // check login state
+        if(sellerEntity == null)
+            return "redirect:/login/seller";
+
+        if(!isAuthenticated(itemId, sellerEntity))
+            return "unauthenticated";
+
+        String hql = "FROM OrderItemEntity orderItemEntity WHERE orderItemEntity.itemEntity.id = :itemId";
+        try(Session session = sessionFactory.openSession()){
+            Query<OrderItemEntity> query = session.createQuery(hql, OrderItemEntity.class);
+            query.setParameter("itemId", itemId);
+            List<OrderItemEntity> orderItems = query.list();
+            model.addAttribute("orderItems", orderItems);
+        }
+        return "item-orders";
     }
 
     private boolean isAuthenticated(int itemId, SellerEntity sellerEntity){

@@ -7,6 +7,9 @@
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
+<style>
+          body {text-align: center;}
+    </style>
 <body>
   <h2>cart</h2>
   <h3>total price: ${cartEntity.totalPrice}</h3>

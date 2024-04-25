@@ -20,6 +20,8 @@
            <input type="submit" value="modify item" />
         </form>
 
+        <a href="/item/${itemEntity.id}/orders"><button>item orders</button></a>
+
         <p><a href="/item/all">item all</a></p>
         <p><a href="/item/newItem">add new item</a></p>
         <p><a href="/login/seller/logout">logout</a></p>
