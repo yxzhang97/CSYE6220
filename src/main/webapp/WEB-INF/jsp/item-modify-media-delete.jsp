@@ -35,20 +35,6 @@
         p {
             margin-top: 10px;
         }
-        button {
-                    background-color: #f44336;
-                    color: white;
-                    border: none;
-                    border-radius: 4px;
-                    cursor: pointer;
-                    font-size: 12px;
-                    padding: 8px 16px;
-                    text-decoration: none;
-                }
-
-                button:hover {
-                    background-color: #d32f2f;
-                }
         a {
             text-decoration: none;
             color: #007bff;
@@ -61,16 +47,10 @@
 <body>
     <h2>Modify Images</h2>
 
-    <c:forEach var="url" items="${itemEntity.url2media}">
+    <c:forEach var="url" items="${url2medias}">
        <img src="${url}" width="100" height="100" alt="Alternate Text">
+       <a href="/item/modify/${itemEntity.id}/media${url}"><button>Delete</button></a>
     </c:forEach>
-
-    <form method="POST" action="/item/modify/${itemEntity.id}/media" enctype="multipart/form-data">
-        <input type="file" name="file" /><br/><br/>
-        <input type="submit" value="Submit" />
-    </form>
-
-    <p><a href="/item/modify/${itemEntity.id}/media/delete"><button>Delete Images</button></a></p>
 
 
     <p><a href="/item/all">All Items</a></p>

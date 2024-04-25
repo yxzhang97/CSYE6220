@@ -46,6 +46,7 @@
     </style>
 </head>
 <body>
+    <h2>Delivery Addresses</h2>
     <c:if test="${defaultAddress.valid}">
         <p>Default Delivery Address: ${defaultAddress.state} ${defaultAddress.city} ${defaultAddress.street} ${defaultAddress.aptNumber} ${defaultAddress.zipCode}</p>
     </c:if>

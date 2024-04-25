@@ -59,6 +59,9 @@ public class ItemController {
         if(sellerEntity == null)
             return "redirect:/login/seller";
 
+        if(!isAuthenticated(itemId, sellerEntity))
+            return "unauthenticated";
+
         String hql = "FROM ItemEntity itemEntity WHERE itemEntity.id = :itemId";
         try(Session session = sessionFactory.openSession()){
             Query<ItemEntity> query = session.createQuery(hql, ItemEntity.class);
@@ -126,6 +129,9 @@ public class ItemController {
         if(sellerEntity == null)
             return "redirect:/login/seller";
 
+        if(!isAuthenticated(itemId, sellerEntity))
+            return "unauthenticated";
+
         try(Session session = sessionFactory.openSession()){
             String hql = "FROM ItemEntity itemEntity WHERE itemEntity.id = :itemId";
             Query<ItemEntity> query = session.createQuery(hql, ItemEntity.class);
@@ -138,8 +144,31 @@ public class ItemController {
         return "item-modify-media";
     }
 
-    @PostMapping("/modify/{itemId}/media/{url2media}")
-    public String handleDelete_itemModifyMedia(
+    @GetMapping("/modify/{itemId}/media/delete")
+    public String handleGet_itemModifyMediaDelete(
+            @PathVariable(name = "itemId") int itemId,
+            @SessionAttribute(name = "seller", required = false)SellerEntity sellerEntity,
+            Model model
+    ){
+        // check login state
+        if(sellerEntity == null)
+            return "redirect:/login/seller";
+
+        if(!isAuthenticated(itemId, sellerEntity))
+            return "unauthenticated";
+
+        for(ItemEntity itemEntity : sellerEntity.getItems()){
+            if(itemEntity.getId() == itemId){
+                model.addAttribute("itemEntity", itemEntity);
+                model.addAttribute("url2medias", itemEntity.getUrl2media());
+                break;
+            }
+        }
+        return "item-modify-media-delete";
+    }
+
+    @RequestMapping("/modify/{itemId}/media/*/{url2media}")
+    public String handleDelete_itemModifyMediaDelete(
             @PathVariable(name = "itemId") int itemId,
             @SessionAttribute(name = "seller", required = false)SellerEntity sellerEntity,
             @PathVariable(name = "url2media") String url2media,
@@ -149,6 +178,10 @@ public class ItemController {
         if(sellerEntity == null)
             return "redirect:/login/seller";
 
+        if(!isAuthenticated(itemId, sellerEntity))
+            return "unauthenticated";
+
+        url2media = "/img/" + url2media;
         try(Session session = sessionFactory.openSession()){
 
             for(ItemEntity itemEntity : sellerEntity.getItems()){
@@ -163,7 +196,7 @@ public class ItemController {
                 }
             }
         }
-        return "item-modify-media";
+        return "redirect:/item/modify/" + itemId + "/media/delete";
     }
 
     final String IMG = "./src/main/webapp/img/";
@@ -178,6 +211,9 @@ public class ItemController {
         // check login state
         if(sellerEntity == null)
             return "redirect:/login/seller";
+
+        if(!isAuthenticated(itemId, sellerEntity))
+            return "unauthenticated";
 
         if(file.isEmpty())
             return "redirect:/item/modify/" + itemId + "/media";

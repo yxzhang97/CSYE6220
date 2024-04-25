@@ -87,12 +87,15 @@ public class OrderController {
     @PostMapping("/newOrder")
     public String handlePost_orderNew(
             @SessionAttribute(name = "user", required = false)UserEntity userEntity,
-            @RequestParam(name = "addressId") int addressId,
+            @RequestParam(name = "addressId", defaultValue = "-1") int addressId,
             Model model
     ){
         // check login state
         if(userEntity == null)
             return "redirect:/login/user";
+
+        if(addressId == -1)
+            return "redirect:/account-info/delivery-addresses";
 
         try(Session session = sessionFactory.openSession()) {
             Transaction transaction = session.beginTransaction();

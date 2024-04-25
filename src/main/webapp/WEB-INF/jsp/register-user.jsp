@@ -70,5 +70,10 @@
         <input type="password" id="password" name="password"><br>
         <input type="submit" value="Register">
     </form>
+
+        <p><a href="/account-info/basic">Account Info - Basic</a></p>
+        <p><a href="/login/user/logout">Logout</a></p>
+        <p><a href="/register/user">User Register</a></p>
+        <p><a href="/store-page">Store Home Page</a></p>
 </body>
 </html>

@@ -60,5 +60,10 @@
         <input type="password" id="password" name="password"><br>
         <input type="submit" value="Register">
     </form>
+
+        <p><a href="/item/all">All Items</a></p>
+        <p><a href="/item/newItem">Add New Item</a></p>
+        <p><a href="/login/seller/logout">Logout</a></p>
+        <p><a href="/register/seller">Seller Register</a></p>
 </body>
 </html>

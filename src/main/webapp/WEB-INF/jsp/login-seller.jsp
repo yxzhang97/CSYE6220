@@ -65,5 +65,6 @@
     <p><a href="/item/all">All Items</a></p>
     <p><a href="/login/seller/logout">Logout</a></p>
     <p><a href="/register/seller">Seller Register</a></p>
+    <p><a href="/store-page">Store Home Page</a></p>
 </body>
 </html>
