@@ -1,18 +1,47 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
 	pageEncoding="ISO-8859-1"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html>
-	<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-	<title>Demo | Welcome</title>
-	</head>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+    <title>Login Successful</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f8f8;
+        }
 
-	<body>
-		<h2>login successfully</h2>
-	</body>
+        h2 {
+            color: #333;
+            margin-top: 20px;
+        }
 
-	<p><a href="/item/all">item all</a></p>
-      <p><a href="/item/newItem">add new item</a></p>
-      <p><a href="/login/seller/logout">logout</a></p>
-      <p><a href="/register/seller">seller register</a></p>
+        p {
+            color: #666;
+            margin: 10px 0;
+        }
+
+        a {
+            text-decoration: none;
+            color: #069;
+            margin: 10px 0;
+            display: inline-block;
+        }
+
+        a:hover {
+            color: #09f;
+        }
+    </style>
+</head>
+<body>
+    <h2>Login Successfully</h2>
+
+    <p><a href="/item/all">All Items</a></p>
+    <p><a href="/item/newItem">Add New Item</a></p>
+    <p><a href="/login/seller/logout">Logout</a></p>
+    <p><a href="/register/seller">Seller Register</a></p>
+</body>
 </html>

@@ -73,6 +73,9 @@ public class OrderController {
         if(userEntity == null)
             return "redirect:/login/user";
 
+        if(userEntity.getCartEntity().getNumOfItems() == 0)
+            return "redirect:/store-page";
+
         model.addAttribute("cartEntity", userEntity.getCartEntity());
         model.addAttribute("cartItems", userEntity.getCartEntity().getCartItems());
         model.addAttribute("defaultAddress", userEntity.getDefaultDeliveryAddress());

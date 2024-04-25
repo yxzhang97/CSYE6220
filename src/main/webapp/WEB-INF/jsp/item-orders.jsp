@@ -45,7 +45,7 @@
             Date Last Modified: ${orderItem.dateLastModified}<br>
             Amount: ${orderItem.amount}<br>
             Total Price: $${orderItem.totalPrice}<br>
-            Delivery Address:
+            Delivery Address: ${orderItem.orderEntity.addressEntity.state} ${orderItem.orderEntity.addressEntity.city} ${orderItem.orderEntity.addressEntity.street} ${orderItem.orderEntity.addressEntity.aptNumber} ${orderItem.orderEntity.addressEntity.zipCode}
         </p>
     </c:forEach>
 

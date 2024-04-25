@@ -33,10 +33,10 @@ public class CommentController {
         this.sessionFactory = this.configuration.buildSessionFactory();
     }
 
-    @GetMapping("/new")
+    @GetMapping("/new/{orderItemId}")
     public String handleGet_newComment(
             @SessionAttribute(name = "user")UserEntity userEntity,
-            @RequestParam(name = "orderItemId") int orderItemId,
+            @PathVariable(name = "orderItemId") int orderItemId,
             Model model
     ){
         // check login state
@@ -56,10 +56,10 @@ public class CommentController {
         return "comment-new";
     }
 
-    @PostMapping("/new")
+    @PostMapping("/new/{orderItemId}")
     public String handlePost_newComment(
             @SessionAttribute(name = "user")UserEntity userEntity,
-            @RequestParam(name = "orderItemId") int orderItemId,
+            @PathVariable(name = "orderItemId") int orderItemId,
             @RequestParam(name = "text") String text
     ){
         // check login state

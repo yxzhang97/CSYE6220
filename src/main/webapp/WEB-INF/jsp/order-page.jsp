@@ -5,30 +5,73 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Order Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f8f8;
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        h3 {
+            color: #666;
+            margin-top: 20px;
+        }
+
+        p {
+            color: #666;
+            margin: 10px 0;
+        }
+
+        button {
+            padding: 8px 16px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        a {
+            text-decoration: none;
+            color: #069;
+            margin: 10px;
+        }
+
+        a:hover {
+            color: #09f;
+        }
+    </style>
 </head>
-<style>
-      body {text-align: center;}
-      h1 {text-align: center;}
-      h2 {text-align: center;}
-      h3 {text-align: center;}
-      p {text-align: center;}
-      div {text-align: center;}
-</style>
+
 <body>
-  <h2>order</h2>
-  <h3>order id: ${orderEntity.id}</h3>
-  <h3>total price: ${orderEntity.totalPrice}</h3>
-  <c:forEach var="orderItem" items="${orderItems}">
-    <p>
-    item name: ${orderItem.itemEntity.name}<br>
-    unit price: $${orderItem.unitPrice}<br>
-    total price: $${orderItem.totalPrice}<br>
-    amount: ${orderItem.amount}<br>
-    </p>
-  </c:forEach>
+    <h2>Order Details</h2>
+    <h3>Order ID: ${orderEntity.id}</h3>
+    <h3>Total Price: ${orderEntity.totalPrice}</h3>
 
-<p><a href="/store-page">store home page</a></p>
+    <c:forEach var="orderItem" items="${orderItems}">
+        <p>
+            Item Name: ${orderItem.itemEntity.name}<br>
+            Unit Price: $${orderItem.unitPrice}<br>
+            Total Price: $${orderItem.totalPrice}<br>
+            Amount: ${orderItem.amount}<br>
+            <a href="/comment/new/${orderItem.id}"><button>Write a Comment</button></a>
+        </p>
+    </c:forEach>
 
+    <p><a href="/store-page">Store Home Page</a></p>
 </body>
 </html>

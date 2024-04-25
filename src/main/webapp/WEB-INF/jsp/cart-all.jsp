@@ -5,30 +5,77 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<style>
-          body {text-align: center;}
+    <title>Shopping Cart</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f8f8;
+        }
+
+        h2 {
+            color: #333;
+            margin-top: 20px;
+        }
+
+        h3 {
+            color: #666;
+            margin: 10px 0;
+        }
+
+        p {
+            color: #666;
+            margin: 10px 0;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 8px 16px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        a {
+            text-decoration: none;
+            color: #069;
+            margin: 10px 0;
+            display: inline-block;
+        }
+
+        a:hover {
+            color: #09f;
+        }
     </style>
+</head>
 <body>
-  <h2>cart</h2>
-  <h3>total price: ${cartEntity.totalPrice}</h3>
-  <h3>num of items: ${cartEntity.numOfItems}</h3>
-  <c:forEach var="cartItem" items="${cartEntity.cartItems}">
-  <c:if test = "${cartItem.valid}">
-    <p>
-    item name: ${cartItem.itemEntity.name}<br>
-    unit price: $${cartItem.unitPrice}<br>
-    total price: $${cartItem.totalPrice}<br>
-    amount: ${cartItem.amount}<br>
-    <a href="/cart/delete/${cartItem.id}"><button>remove</button></a>
-    </p>
-  </c:if>
-  </c:forEach>
+    <h2>Shopping Cart</h2>
+    <h3>Total Price: ${cartEntity.totalPrice}</h3>
+    <h3>Number of Items: ${cartEntity.numOfItems}</h3>
 
-  <a href="/order/newOrder/pre"><button>check out</button></a>
+    <c:forEach var="cartItem" items="${cartEntity.cartItems}">
+        <c:if test="${cartItem.valid}">
+            <p>
+                Item Name: ${cartItem.itemEntity.name}<br>
+                Unit Price: $${cartItem.unitPrice}<br>
+                Total Price: $${cartItem.totalPrice}<br>
+                Amount: ${cartItem.amount}<br>
+                <a href="/cart/delete/${cartItem.id}"><button>Remove</button></a>
+            </p>
+        </c:if>
+    </c:forEach>
 
-<p><a href="/store-page">store home page</a></p>
+    <a href="/order/newOrder/pre"><button>Check Out</button></a>
 
+    <p><a href="/store-page">Store Home Page</a></p>
+    <p><a href="/cart/all">Cart</a></p>
+    <p><a href="/order/all">Orders</a></p>
 </body>
 </html>
