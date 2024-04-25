@@ -1,6 +1,7 @@
 package com.yuxiang.csye6220.controller;
 
 import com.yuxiang.csye6220.pojo.CommentEntity;
+import com.yuxiang.csye6220.pojo.OrderEntity;
 import com.yuxiang.csye6220.pojo.OrderItemEntity;
 import com.yuxiang.csye6220.pojo.UserEntity;
 import org.hibernate.Session;
@@ -43,13 +44,16 @@ public class CommentController {
         if(userEntity == null)
             return "redirect:/login/user";
 
+        if(!isAuthenticated(orderItemId, userEntity))
+            return "unauthenticated";
+
         try(Session session = sessionFactory.openSession()) {
             String hql = "FROM OrderItemEntity orderItemEntity WHERE orderItemEntity.id = :orderItemId";
             Query<OrderItemEntity> query_getOrderItemEntity = session.createQuery(hql, OrderItemEntity.class);
             query_getOrderItemEntity.setParameter("orderItemId", orderItemId);
             OrderItemEntity orderItemEntity = query_getOrderItemEntity.getSingleResultOrNull();
             if (orderItemEntity == null || orderItemEntity.getOrderEntity().getOwner().getId() != userEntity.getId())
-                return "comment-invalid";
+                return "unauthenticated";
 
             model.addAttribute("orderItemEntity", orderItemEntity);
         }
@@ -66,6 +70,9 @@ public class CommentController {
         if(userEntity == null)
             return "redirect:/login/user";
 
+        if(!isAuthenticated(orderItemId, userEntity))
+            return "unauthenticated";
+
         int itemId = -1;
 
         try(Session session = sessionFactory.openSession()){
@@ -74,7 +81,7 @@ public class CommentController {
             query_getOrderItemEntity.setParameter("orderItemId", orderItemId);
             OrderItemEntity orderItemEntity = query_getOrderItemEntity.getSingleResultOrNull();
             if(orderItemEntity == null || orderItemEntity.getOrderEntity().getOwner().getId() != userEntity.getId())
-                return "comment-invalid";
+                return "unauthenticated";
 
             CommentEntity commentEntity = applicationContext.getBean("commentEntity_prototype", CommentEntity.class);
             commentEntity.setDateCreated(new Date());
@@ -85,6 +92,8 @@ public class CommentController {
             commentEntity.setText(text);
 
             itemId = orderItemEntity.getItemEntity().getId();
+            if(text == null || text.length() == 0)
+                return "redirect:/store-page/item-detail/" + itemId;
 
             Transaction transaction = session.beginTransaction();
             session.persist(commentEntity);
@@ -94,5 +103,13 @@ public class CommentController {
             return "redirect:/store-page/item-detail/" + itemId;
         else
             return "redirect:/order/all";
+    }
+
+    private boolean isAuthenticated(int orderItemId, UserEntity userEntity){
+        for(OrderEntity orderEntity : userEntity.getOrders())
+            for(OrderItemEntity orderItemEntity : orderEntity.getOrderItems())
+                if(orderItemEntity.getId() == orderItemId)
+                    return true;
+        return false;
     }
 }
