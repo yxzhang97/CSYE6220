@@ -95,11 +95,9 @@
         <input type="submit" value="Submit">
     </form>
 
-    <p><a href="/item/delete/${itemEntity.id}"><button>Delete</button></a></p>
+    <p><a href="/item/modify/${itemEntity.id}/media"><button>Images</button></a></p>
 
-    <c:forEach var="url" items="${itemEntity.url2media}">
-        <p><img src="${url}" alt="Alternate Text"></p>
-    </c:forEach>
+    <p><a href="/item/delete/${itemEntity.id}"><button>Delete</button></a></p>
 
     <p><a href="/item/all">All Items</a></p>
     <p><a href="/item/newItem">Add New Item</a></p>

@@ -46,10 +46,11 @@
     </style>
 </head>
 <body>
+    <h2>Items</h2>
     <c:forEach var="item" items="${items}">
         <c:if test="${item.valid}">
             <p>
-                Item Name: ${item.name}
+                ${item.name}
                 <a href="/item/${item.id}"><button>Detail</button></a>
             </p>
         </c:if>

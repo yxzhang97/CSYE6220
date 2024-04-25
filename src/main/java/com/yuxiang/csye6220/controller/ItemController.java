@@ -14,7 +14,13 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.LinkedList;
 import java.util.List;
 
 @Controller
@@ -126,16 +132,17 @@ public class ItemController {
             query.setParameter("itemId", itemId);
             ItemEntity itemEntity = query.getSingleResultOrNull();
             List<String> url2medias = itemEntity.getUrl2media();
+            model.addAttribute("itemEntity", itemEntity);
             model.addAttribute("url2medias", url2medias);
         }
         return "item-modify-media";
     }
 
-    @DeleteMapping("/modify/{itemId}/media")
+    @PostMapping("/modify/{itemId}/media/{url2media}")
     public String handleDelete_itemModifyMedia(
             @PathVariable(name = "itemId") int itemId,
             @SessionAttribute(name = "seller", required = false)SellerEntity sellerEntity,
-            @RequestParam(name = "url2media") String url2media,
+            @PathVariable(name = "url2media") String url2media,
             Model model
     ){
         // check login state
@@ -143,54 +150,64 @@ public class ItemController {
             return "redirect:/login/seller";
 
         try(Session session = sessionFactory.openSession()){
-            String hql = "FROM ItemEntity itemEntity WHERE itemEntity.id = :itemId";
-            Query<ItemEntity> query = session.createQuery(hql, ItemEntity.class);
-            query.setParameter("itemId", itemId);
-            ItemEntity itemEntity = query.getSingleResultOrNull();
-            List<String> urls = itemEntity.getUrl2media();
-            for(int i = 0; i < urls.size(); i++)
-                if(urls.get(i).equals(url2media)){
-                    urls.remove(i);
-                    break;
+
+            for(ItemEntity itemEntity : sellerEntity.getItems()){
+                if(itemEntity.getId() == itemId){
+                    List<String> urls = itemEntity.getUrl2media();
+                    urls.remove(url2media);
+                    Transaction transaction = session.beginTransaction();
+                    session.merge(itemEntity);
+                    transaction.commit();
+                    model.addAttribute("itemEntity", itemEntity);
+                    model.addAttribute("url2medias", itemEntity.getUrl2media());
                 }
-
-            // delete image here
-
-            Transaction transaction = session.beginTransaction();
-            session.persist(itemEntity);
-            transaction.commit();
-            model.addAttribute("url2medias", itemEntity.getUrl2media());
+            }
         }
         return "item-modify-media";
     }
+
+    final String IMG = "./src/main/webapp/img/";
 
     @PostMapping("/modify/{itemId}/media")
     public String handlePost_itemModifyMedia(
             @PathVariable(name = "itemId") int itemId,
             @SessionAttribute(name = "seller", required = false)SellerEntity sellerEntity,
-            @RequestParam(name = "url2media") String url2media,
+            @RequestParam(name = "file") MultipartFile file,
             Model model
     ){
         // check login state
         if(sellerEntity == null)
             return "redirect:/login/seller";
 
-        try(Session session = sessionFactory.openSession()){
-            String hql = "FROM ItemEntity itemEntity WHERE itemEntity.id = :itemId";
-            Query<ItemEntity> query = session.createQuery(hql, ItemEntity.class);
-            query.setParameter("itemId", itemId);
-            ItemEntity itemEntity = query.getSingleResultOrNull();
-            List<String> urls = itemEntity.getUrl2media();
-            urls.add(url2media);
+        if(file.isEmpty())
+            return "redirect:/item/modify/" + itemId + "/media";
 
-            // upload image here
+        try{
+            byte[] bytes = file.getBytes();
+            Path path = Paths.get(IMG + file.getOriginalFilename());
+            Files.write(path, bytes);
 
-            Transaction transaction = session.beginTransaction();
-            session.persist(itemEntity);
-            transaction.commit();
-            model.addAttribute("url2medias", itemEntity.getUrl2media());
+            try(Session session = sessionFactory.openSession()){
+
+                for(ItemEntity itemEntity : sellerEntity.getItems()){
+                    if(itemEntity.getId() == itemId){
+                        if(itemEntity.getUrl2media() == null)
+                            itemEntity.setUrl2media(new LinkedList<>());
+                        List<String> urls = itemEntity.getUrl2media();
+                        urls.add("/img/" + file.getOriginalFilename());
+                        Transaction transaction = session.beginTransaction();
+                        session.merge(itemEntity);
+                        transaction.commit();
+                    }
+                }
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        return "item-modify-media";
+
+
+        return "redirect:/item/modify/" + itemId + "/media";
     }
 
     @GetMapping("/newItem")

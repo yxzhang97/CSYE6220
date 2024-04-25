@@ -78,7 +78,7 @@
 <c:forEach var="item" items="${items}">
     <div class="item">
         <a href="/store-page/item-detail/${item.id}">
-            <img src="${cover}" alt="cover image">
+            <img src="${item.getCover()}" width="150" height="175" alt="cover image">
             <p class="item-name">${item.name}</p>
             <p class="item-price">$${item.price}</p>
         </a>

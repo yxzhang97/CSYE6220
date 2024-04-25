@@ -73,7 +73,7 @@
     <p>Description: ${itemEntity.description}</p>
 
     <c:forEach var="url" items="${itemEntity.url2media}">
-        <img src="${url}" alt="Alternate Text">
+        <img src="${url}" width="50%" height="50%" alt="Alternate Text">
     </c:forEach>
 
     <form action="/cart/newItem/${itemEntity.id}" method="post">

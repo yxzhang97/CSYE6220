@@ -2,6 +2,7 @@ package com.yuxiang.csye6220.pojo;
 
 import jakarta.persistence.*;
 
+import java.util.LinkedList;
 import java.util.List;
 
 @Entity
@@ -142,5 +143,15 @@ public class ItemEntity {
 
     public void setValid(boolean valid) {
         this.valid = valid;
+    }
+
+    public String getCover(){
+        return url2media.size() == 0? "" : url2media.get(0);
+    }
+
+    public ItemEntity(){
+        url2media = new LinkedList<>();
+        comments = new LinkedList<>();
+        orders = new LinkedList<>();
     }
 }

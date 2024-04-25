@@ -3,6 +3,7 @@ package com.yuxiang.csye6220.pojo;
 import jakarta.persistence.*;
 
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 @Entity
@@ -184,5 +185,10 @@ public class UserEntity {
 
     public void updateLastModifiedDate(){
         dateLastModified = new Date();
+    }
+
+    public UserEntity(){
+        deliveryAddresses = new LinkedList<>();
+        orders = new LinkedList<>();
     }
 }

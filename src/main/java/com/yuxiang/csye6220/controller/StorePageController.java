@@ -20,7 +20,7 @@ import java.util.Map;
 @RequestMapping("/store-page")
 public class StorePageController {
 
-    private static final int PAGE_LENGTH = 10;
+    private static final int PAGE_LENGTH = 20;
 
     private Configuration configuration;
 

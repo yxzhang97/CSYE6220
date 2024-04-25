@@ -3,6 +3,7 @@ package com.yuxiang.csye6220.pojo;
 import jakarta.persistence.*;
 
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 @Entity
@@ -159,5 +160,10 @@ public class OrderEntity {
 
     public void updateDateLastModified(){
         dateLastModified = new Date();
+    }
+
+    public OrderEntity(){
+        items = new LinkedList<>();
+        orderItems = new LinkedList<>();
     }
 }
