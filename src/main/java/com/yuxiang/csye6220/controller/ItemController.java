@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -258,11 +259,15 @@ public class ItemController {
     @PostMapping("/newItem")
     public String handlePost_newItem(
             @SessionAttribute(name = "seller", required = false) SellerEntity sellerEntity,
-            @ModelAttribute(name = "itemDTO") ItemDTO itemDTO
+            @ModelAttribute(name = "itemDTO") ItemDTO itemDTO,
+            BindingResult bindingResult
     ){
         // check login state
         if(sellerEntity == null)
             return "redirect:/login/seller";
+
+        if(bindingResult.hasErrors())
+            return "item-error";
 
         ItemEntity itemEntity = applicationContext.getBean("itemEntity_prototype", ItemEntity.class);
         itemDTO.updateInfoToItemEntity(itemEntity);
